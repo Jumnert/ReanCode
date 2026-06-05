@@ -11,7 +11,7 @@ Open `.env.local` and change lines 12-14 from:
 # ❌ WRONG - All say NEXTAUTH_SECRET:
 NEXTAUTH_SECRET="gNnlm2F+6XkGz4Yv1L9m0gIu46tuJJMtDUqR3YAT9a2XSxxy1oRrbwfMbC9Je3bE"
 NEXTAUTH_SECRET="http://localhost:3000"
-NEXTAUTH_SECRET="http://rean2code.netlify.app"
+NEXTAUTH_SECRET="http://rean2code.vercel.app"
 ```
 
 To:
@@ -27,8 +27,8 @@ Or if you prefer production URLs:
 
 ```bash
 NEXTAUTH_SECRET="gNnlm2F+6XkGz4Yv1L9m0gIu46tuJJMtDUqR3YAT9a2XSxxy1oRrbwfMbC9Je3bE"
-NEXTAUTH_URL="https://rean2code.netlify.app"
-NEXT_PUBLIC_APP_URL="https://rean2code.netlify.app"
+NEXTAUTH_URL="https://rean2code.vercel.app"
+NEXT_PUBLIC_APP_URL="https://rean2code.vercel.app"
 ```
 
 ## What Each Variable Does
