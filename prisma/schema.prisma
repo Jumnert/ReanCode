@@ -1,0 +1,370 @@
+// Prisma Schema - Learning Platform
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// AUTH & USER MANAGEMENT (NextAuth v5)
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  name          String?
+  password      String? // Hashed password for credentials login
+  avatarUrl     String?
+  image         String? // For NextAuth compatibility
+  bannerUrl     String?
+  bio           String?   @db.Text
+  role          String    @default("user") // user, admin, moderator
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  sessions     Session[]
+  accounts     Account[]
+  progress     UserProgress[]
+  bookmarks    Bookmark[]
+  preferences  UserPreference?
+  downloads    BookDownload[]
+  comments     Comment[]
+  solutions    Solution[]
+  snippets     CodeSnippet[]
+  achievements UserAchievement[]
+
+  @@index([email])
+}
+
+// NextAuth v5 Session Model
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// NextAuth v5 Account Model (OAuth)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// NextAuth v5 Verification Token Model
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================
+// CONTENT MANAGEMENT
+// ============================================
+
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String   @db.Text
+  category    String // html, css, javascript, python, etc
+  difficulty  String   @default("beginner") // beginner, intermediate, advanced
+  order       Int      @default(0)
+  published   Boolean  @default(false)
+  thumbnail   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  lessons  Lesson[]
+  progress UserProgress[]
+
+  @@index([slug])
+  @@index([category])
+  @@index([published])
+}
+
+model Lesson {
+  id               String   @id @default(cuid())
+  courseId         String
+  course           Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  slug             String
+  title            String
+  content          String   @db.Text // MDX content
+  seoDescription   String?
+  order            Int      @default(0)
+  estimatedMinutes Int      @default(10)
+  difficulty       String   @default("beginner")
+  published        Boolean  @default(false)
+  views            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  codeExamples CodeExample[]
+  exercises    Exercise[]
+  quizzes      Quiz[]
+  progress     UserProgress[]
+  bookmarks    Bookmark[]
+  comments     Comment[]
+
+  @@unique([courseId, slug])
+  @@index([courseId, order])
+  @@index([slug])
+}
+
+model CodeExample {
+  id          String   @id @default(cuid())
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  slug        String // for {{code:slug}} in MDX
+  title       String
+  description String?
+  code        String   @db.Text
+  language    String // html, css, javascript, python, etc
+  order       Int      @default(0)
+  editable    Boolean  @default(true)
+  showPreview Boolean  @default(true)
+  starterCode String?  @db.Text
+  tags        String[]
+
+  // Analytics
+  editCount  Int @default(0)
+  resetCount Int @default(0)
+  copyCount  Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([lessonId, slug])
+  @@index([lessonId, order])
+}
+
+model Exercise {
+  id          String   @id @default(cuid())
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title       String
+  description String   @db.Text
+  starterCode String   @db.Text
+  solution    String   @db.Text
+  testCases   Json // [{input, expected, description}]
+  difficulty  String   @default("easy")
+  points      Int      @default(10)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  solutions Solution[]
+
+  @@index([lessonId])
+}
+
+model Quiz {
+  id        String   @id @default(cuid())
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title     String
+  questions Json // [{question, options: [], correctIndex, explanation}]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+}
+
+// ============================================
+// USER PROGRESS & ENGAGEMENT
+// ============================================
+
+model UserProgress {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId     String?
+  course       Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessonId     String?
+  lesson       Lesson?  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completed    Boolean  @default(false)
+  lastAccessed DateTime @default(now())
+  timeSpent    Int      @default(0) // seconds
+  score        Int? // for quizzes/exercises
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+  @@index([userId, courseId])
+  @@index([userId, completed])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+}
+
+model UserPreference {
+  userId             String   @id
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme              String   @default("light") // light, dark, system
+  codeTheme          String   @default("vs-dark")
+  fontSize           Int      @default(14)
+  autoSave           Boolean  @default(true)
+  emailNotifications Boolean  @default(true)
+  updatedAt          DateTime @updatedAt
+}
+
+// ============================================
+// GOALKICKER BOOKS
+// ============================================
+
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  category    String
+  description String   @db.Text
+  coverUrl    String?
+  pdfUrl      String // Cloudinary/Vercel Blob URL
+  fileSize    Int // bytes
+  pages       Int
+  author      String   @default("GoalKicker")
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  downloads BookDownload[]
+
+  @@index([slug])
+  @@index([category])
+}
+
+model BookDownload {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId       String
+  book         Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  downloadedAt DateTime @default(now())
+
+  @@unique([userId, bookId])
+  @@index([userId])
+  @@index([bookId])
+}
+
+// ============================================
+// COMMUNITY & SOCIAL
+// ============================================
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId  String
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  content   String   @db.Text
+  upvotes   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+  @@index([userId])
+}
+
+model Solution {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  code       String   @db.Text
+  language   String
+  passed     Boolean  @default(false)
+  upvotes    Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([exerciseId])
+  @@index([userId])
+}
+
+model CodeSnippet {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String?
+  title       String
+  description String?
+  code        String   @db.Text
+  language    String
+  isPublic    Boolean  @default(false)
+  isFork      Boolean  @default(false)
+  forkedFrom  String?
+  views       Int      @default(0)
+  upvotes     Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([language])
+}
+
+// ============================================
+// GAMIFICATION
+// ============================================
+
+model Achievement {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  icon        String
+  points      Int      @default(10)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  users UserAchievement[]
+
+  @@index([slug])
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  unlockedAt    DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}

@@ -1,0 +1,62 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e6]:
+      - link "rean2code" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: rean2code
+      - generic [ref=e10]:
+        - searchbox "Quick search..." [ref=e12]
+        - generic [ref=e13]:
+          - button "Tutorials" [ref=e14] [cursor=pointer]
+          - button "Books" [ref=e15] [cursor=pointer]
+          - button "Exercises" [ref=e16] [cursor=pointer]
+      - generic [ref=e18]:
+        - button "Login" [ref=e19] [cursor=pointer]
+        - button "Get Started" [ref=e20] [cursor=pointer]
+    - generic [ref=e27]:
+      - link "< HTML />" [ref=e29] [cursor=pointer]:
+        - /url: /learn/html
+        - generic [ref=e30]: <
+        - text: HTML
+        - generic [ref=e31]: />
+      - link "< CSS />" [ref=e34] [cursor=pointer]:
+        - /url: /learn/css
+        - generic [ref=e35]: <
+        - text: CSS
+        - generic [ref=e36]: />
+      - link "< JavaScript />" [ref=e39] [cursor=pointer]:
+        - /url: /learn/javascript
+        - generic [ref=e40]: <
+        - text: JavaScript
+        - generic [ref=e41]: />
+      - link "< React />" [ref=e44] [cursor=pointer]:
+        - /url: /learn/react
+        - generic [ref=e45]: <
+        - text: React
+        - generic [ref=e46]: />
+      - link "< Python />" [ref=e49] [cursor=pointer]:
+        - /url: /learn/python
+        - generic [ref=e50]: <
+        - text: Python
+        - generic [ref=e51]: />
+      - link "< Java />" [ref=e54] [cursor=pointer]:
+        - /url: /learn/java
+        - generic [ref=e55]: <
+        - text: Java
+        - generic [ref=e56]: />
+      - link "< SQL />" [ref=e59] [cursor=pointer]:
+        - /url: /learn/sql
+        - generic [ref=e60]: <
+        - text: SQL
+        - generic [ref=e61]: />
+      - link "< Node.js />" [ref=e64] [cursor=pointer]:
+        - /url: /learn/nodejs
+        - generic [ref=e65]: <
+        - text: Node.js
+        - generic [ref=e66]: />
+  - main [ref=e69]:
+    - generic [ref=e70]:
+      - heading "Geeks Tutorials" [level=1] [ref=e71]
+      - paragraph [ref=e73]: No tutorials yet. DB commented out.
+  - button "Open Next.js Dev Tools" [ref=e79] [cursor=pointer]:
+    - img [ref=e80]

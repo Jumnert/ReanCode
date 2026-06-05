@@ -1,0 +1,226 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e6]:
+      - link "rean2code" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: rean2code
+      - generic [ref=e11]:
+        - button "Tutorials" [ref=e12] [cursor=pointer]
+        - button "Books" [ref=e13] [cursor=pointer]
+        - button "Exercises" [ref=e14] [cursor=pointer]
+      - generic [ref=e16]:
+        - button "Login" [ref=e17] [cursor=pointer]
+        - button "Get Started" [ref=e18] [cursor=pointer]
+    - generic [ref=e25]:
+      - link "< HTML />" [ref=e27] [cursor=pointer]:
+        - /url: /learn/html
+        - generic [ref=e28]: <
+        - text: HTML
+        - generic [ref=e29]: />
+      - link "< CSS />" [ref=e32] [cursor=pointer]:
+        - /url: /learn/css
+        - generic [ref=e33]: <
+        - text: CSS
+        - generic [ref=e34]: />
+      - link "< JavaScript />" [ref=e37] [cursor=pointer]:
+        - /url: /learn/javascript
+        - generic [ref=e38]: <
+        - text: JavaScript
+        - generic [ref=e39]: />
+      - link "< React />" [ref=e42] [cursor=pointer]:
+        - /url: /learn/react
+        - generic [ref=e43]: <
+        - text: React
+        - generic [ref=e44]: />
+      - link "< Python />" [ref=e47] [cursor=pointer]:
+        - /url: /learn/python
+        - generic [ref=e48]: <
+        - text: Python
+        - generic [ref=e49]: />
+      - link "< Java />" [ref=e52] [cursor=pointer]:
+        - /url: /learn/java
+        - generic [ref=e53]: <
+        - text: Java
+        - generic [ref=e54]: />
+      - link "< SQL />" [ref=e57] [cursor=pointer]:
+        - /url: /learn/sql
+        - generic [ref=e58]: <
+        - text: SQL
+        - generic [ref=e59]: />
+      - link "< Node.js />" [ref=e62] [cursor=pointer]:
+        - /url: /learn/nodejs
+        - generic [ref=e63]: <
+        - text: Node.js
+        - generic [ref=e64]: />
+  - main [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e70]:
+        - generic [ref=e72]:
+          - img [ref=e73]
+          - generic [ref=e76]: Start with the best, scale without limits
+        - generic [ref=e77]:
+          - heading "Rapidly build modern tutorials without limits" [level=1] [ref=e78]:
+            - generic [ref=e79]: Rapidly build modern
+            - generic [ref=e80]:
+              - text: tutorials
+              - generic [ref=e81]: without limits
+          - paragraph [ref=e83]:
+            - text: A powerful learning platform packed with features like
+            - code [ref=e84]: real-time collaboration
+            - text: ","
+            - code [ref=e85]: AI assistance
+            - text: ", and"
+            - code [ref=e86]: interactive coding
+            - text: that can be composed to build any tutorial, directly in your browser.
+        - generic [ref=e87]:
+          - button "Get started" [ref=e88] [cursor=pointer]:
+            - generic [ref=e89]:
+              - img
+              - text: Get started
+          - generic [ref=e91]:
+            - generic:
+              - img
+            - textbox "Quick search..." [ref=e92]
+            - generic [ref=e93]: ⌘K
+        - generic [ref=e94]:
+          - generic [ref=e97]: 1000+ Active learners
+          - generic [ref=e100]: 500+ Tutorials
+          - generic [ref=e103]: 100% Open Source
+      - generic [ref=e106]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e116]:
+              - img [ref=e117]
+              - generic [ref=e119]: tutorial.html
+            - button "Copy" [ref=e120]:
+              - img [ref=e121]
+              - generic [ref=e124]: Copy
+          - code [ref=e127]:
+            - generic [ref=e128]:
+              - generic [ref=e129]: "1"
+              - generic [ref=e130]:
+                - generic [ref=e131]: "color: #a78bfa\">class=\"flex flex-col items-center p-8\">"
+                - generic [ref=e133]: "2"
+                - generic [ref=e135]:
+                  - generic [ref=e136]: "3"
+                  - generic [ref=e137]: "color: #a78bfa\">class"
+                  - text: ="
+                  - generic [ref=e138]: size-48 shadow-xl rounded-md
+                  - text: "\""
+                - generic [ref=e139]:
+                  - generic [ref=e140]: "4"
+                  - generic [ref=e141]: "color: #a78bfa\">alt"
+                  - text: ="
+                  - generic [ref=e142]: Tutorial Preview
+                  - text: "\""
+                - generic [ref=e143]:
+                  - generic [ref=e144]: "5"
+                  - generic [ref=e145]: "color: #a78bfa\">src"
+                  - text: ="
+                  - generic [ref=e146]: /img/tutorial.png
+                  - text: "\""
+                - generic [ref=e147]:
+                  - generic [ref=e148]: "6"
+                  - generic [ref=e149]: />
+                - generic [ref=e150]:
+                  - generic [ref=e151]: "7"
+                  - generic [ref=e152]:
+                    - generic [ref=e153]: "color: #a78bfa\">class=\"flex\">"
+                    - generic [ref=e154]:
+                      - generic [ref=e155]: "8"
+                      - generic [ref=e156]: "color: #a78bfa\">class"
+                      - text: ="
+                      - generic [ref=e157]: text-2xl font-medium
+                      - text: "\">"
+                    - generic [ref=e158]:
+                      - generic [ref=e159]: "9"
+                      - generic [ref=e160]: Learn to Code
+                    - generic [ref=e162]: "10"
+                    - generic [ref=e164]:
+                      - generic [ref=e165]: "11"
+                      - generic [ref=e166]: "color: #a78bfa\">class"
+                      - text: ="
+                      - generic [ref=e167]: flex
+                      - text: "\">"
+                    - generic [ref=e168]:
+                      - generic [ref=e169]: "12"
+                      - generic [ref=e170]: No.
+                    - generic [ref=e171]:
+                      - generic [ref=e172]: "13"
+                      - generic [ref=e173]: "1"
+                    - generic [ref=e175]: "14"
+                    - generic [ref=e177]:
+                      - generic [ref=e178]: "15"
+                      - generic [ref=e179]: "2025"
+                    - generic [ref=e181]: "16"
+                - generic [ref=e184]: "17"
+        - generic [ref=e188]:
+          - img [ref=e193]
+          - generic [ref=e195]:
+            - heading "Learn to Code" [level=3] [ref=e196]
+            - generic [ref=e197]:
+              - generic [ref=e198]: No.
+              - generic [ref=e199]: "1"
+            - paragraph [ref=e200]: "2025"
+      - generic [ref=e202]:
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - img [ref=e205]
+            - generic [ref=e210]: Everything you need to succeed
+          - heading "Built for developers" [level=2] [ref=e211]
+          - paragraph [ref=e212]: Everything you need to learn, build, and deploy modern web applications.
+        - generic [ref=e213]:
+          - generic [ref=e216]:
+            - img [ref=e218]
+            - heading "Interactive Coding" [level=3] [ref=e222]
+            - paragraph [ref=e223]: Write, run, and test code directly in your browser with real-time feedback.
+          - generic [ref=e226]:
+            - img [ref=e228]
+            - heading "AI-Powered Learning" [level=3] [ref=e231]
+            - paragraph [ref=e232]: Get personalized help and explanations powered by advanced AI models.
+          - generic [ref=e235]:
+            - img [ref=e237]
+            - heading "Real-time Collaboration" [level=3] [ref=e242]
+            - paragraph [ref=e243]: Learn together with friends, share progress, and work on projects collaboratively.
+          - generic [ref=e246]:
+            - img [ref=e248]
+            - heading "Comprehensive Tutorials" [level=3] [ref=e250]
+            - paragraph [ref=e251]: Access hundreds of tutorials covering everything from basics to advanced topics.
+          - generic [ref=e254]:
+            - img [ref=e256]
+            - heading "Instant Deployment" [level=3] [ref=e258]
+            - paragraph [ref=e259]: Deploy your projects instantly and share them with the world in one click.
+          - generic [ref=e262]:
+            - img [ref=e264]
+            - heading "Secure & Private" [level=3] [ref=e266]
+            - paragraph [ref=e267]: Your code and progress are protected with enterprise-grade security.
+        - generic [ref=e271]:
+          - generic [ref=e272] [cursor=pointer]:
+            - img [ref=e275]
+            - generic [ref=e280]: 10,000+
+            - generic [ref=e281]: Active Users
+          - generic [ref=e282] [cursor=pointer]:
+            - img [ref=e285]
+            - generic [ref=e287]: 500+
+            - generic [ref=e288]: Tutorials
+          - generic [ref=e289] [cursor=pointer]:
+            - img [ref=e292]
+            - generic [ref=e296]: 5,000+
+            - generic [ref=e297]: Code Examples
+          - generic [ref=e298] [cursor=pointer]:
+            - img [ref=e301]
+            - generic [ref=e303]: 95%
+            - generic [ref=e304]: Success Rate
+        - generic [ref=e305]:
+          - heading "Ready to start building?" [level=3] [ref=e306]
+          - paragraph [ref=e307]: Join thousands of developers learning and building amazing things.
+          - generic [ref=e308]:
+            - button "Start Learning Now" [ref=e309]:
+              - generic [ref=e310]:
+                - img [ref=e311]
+                - text: Start Learning Now
+            - button "View Documentation" [ref=e315]:
+              - img [ref=e316]
+              - text: View Documentation
+  - button "Open Next.js Dev Tools" [ref=e325] [cursor=pointer]:
+    - img [ref=e326]
