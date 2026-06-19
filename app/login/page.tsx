@@ -9,17 +9,11 @@ import {
   signInWithGitHub,
 } from "@/lib/auth-client";
 import TurnstileWidget from "@/components/TurnstileWidget";
-import {
-  Button,
-  TextField,
-  Label,
-  Input,
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  Separator,
-} from "@heroui/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -80,74 +74,68 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative w-full max-w-md">
-        <Card className="w-full backdrop-blur-xl bg-background/80 border border-divider">
-          <CardHeader className="flex flex-col gap-3 px-8 pt-8 pb-6">
+    <main className="relative min-h-[calc(100vh-96px)] py-8 flex items-center justify-center p-4 bg-[#f5f5f7] dark:bg-[#1d1d1f]">
+      <div className="relative w-full max-w-[400px]">
+        <Card className="w-full bg-white dark:bg-[#272729] border border-[#e0e0e0] dark:border-zinc-800 rounded-[18px] overflow-hidden shadow-none">
+          <CardHeader className="flex flex-col gap-2 px-8 pt-8 pb-4">
             {/* Logo */}
             <Link
               href="/"
-              className="group relative text-3xl font-bold tracking-tighter self-center mb-2"
+              className="group relative text-[24px] font-semibold tracking-[-0.28px] self-center mb-1 text-[#1d1d1f] dark:text-white"
             >
-              <span className="text-foreground">
-                រៀន
-                <span className="text-primary">២</span>
-                កូដ
-              </span>
+              រៀន<span className="text-[#0066cc] dark:text-[#2997ff]">២</span>កូដ
             </Link>
 
-            <div className="flex flex-col gap-2 text-center">
-              <h1 className="text-2xl font-bold">ស្វាគមន៍ត្រឡប់មកវិញ</h1>
-              <p className="text-sm text-foreground/60">
+            <div className="flex flex-col gap-0.5 text-center">
+              <h1 className="text-[19px] font-semibold tracking-[0.231px] text-[#1d1d1f] dark:text-white">ស្វាគមន៍ត្រឡប់មកវិញ</h1>
+              <p className="text-[13px] text-[#7a7a7a] dark:text-zinc-400">
                 ចូលទៅកាន់គណនី រៀន២កូដ របស់អ្នក
               </p>
             </div>
           </CardHeader>
 
-          <CardContent className="px-8 pb-8 gap-6">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <CardContent className="px-8 pb-6 flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
               {/* Email Input */}
-              <TextField className="w-full" name="email" type="email">
-                <Label>អ៊ីមែល</Label>
+              <div className="grid gap-1.5">
+                <Label htmlFor="email" className="text-[14px] font-semibold text-[#1d1d1f] dark:text-white">អ៊ីមែល</Label>
                 <Input
+                  id="email"
+                  name="email"
+                  type="email"
                   placeholder="បញ្ចូលអ៊ីមែលរបស់អ្នក"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  className="h-11 rounded-full px-5 border-[#e0e0e0] dark:border-zinc-800 bg-white dark:bg-[#1d1d1f] text-[#1d1d1f] dark:text-white text-[15px] focus-visible:ring-[#0071e3]"
                 />
-              </TextField>
+              </div>
 
               {/* Password Input */}
-              <div className="flex flex-col gap-2">
-                <TextField
-                  className="w-full"
-                  name="password"
-                  type={isPasswordVisible ? "text" : "password"}
-                >
-                  <Label>ពាក្យសម្ងាត់</Label>
+              <div className="flex flex-col gap-1.5">
+                <div className="grid gap-1.5">
+                  <Label htmlFor="password" className="text-[14px] font-semibold text-[#1d1d1f] dark:text-white">ពាក្យសម្ងាត់</Label>
                   <Input
+                    id="password"
+                    name="password"
+                    type={isPasswordVisible ? "text" : "password"}
                     placeholder="បញ្ចូលពាក្យសម្ងាត់របស់អ្នក"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    className="h-11 rounded-full px-5 border-[#e0e0e0] dark:border-zinc-800 bg-white dark:bg-[#1d1d1f] text-[#1d1d1f] dark:text-white text-[15px] focus-visible:ring-[#0071e3]"
                   />
-                </TextField>
+                </div>
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-primary hover:underline self-end"
+                  className="text-[13px] text-[#0066cc] dark:text-[#2997ff] hover:underline self-end mt-1"
                 >
                   ភ្លេចពាក្យសម្ងាត់?
                 </Link>
               </div>
 
               {/* Turnstile */}
-              <div className="flex justify-center">
+              <div className="flex justify-center my-1">
                 <TurnstileWidget
                   onVerify={setTurnstileToken}
                   onError={() =>
@@ -158,7 +146,7 @@ export default function LoginPage() {
 
               {/* Error Message */}
               {error && (
-                <div className="p-3 rounded-lg bg-danger/10 text-danger text-sm">
+                <div className="p-3 rounded-[11px] bg-red-500/10 text-red-500 text-[13px] border border-red-500/20 text-center font-medium">
                   {error}
                 </div>
               )}
@@ -166,30 +154,28 @@ export default function LoginPage() {
               {/* Continue Button */}
               <Button
                 type="submit"
-                
-                className="w-full font-semibold"
-                
-                isDisabled={isLoading || !turnstileToken}
+                className="w-full h-11 bg-[#0066cc] hover:bg-[#0071e3] text-white font-medium rounded-full text-[15px] transition-transform active:scale-[0.95] mt-2"
+                disabled={isLoading || !turnstileToken}
               >
                 {isLoading ? "កំពុងបន្ត..." : "បន្ត"}
               </Button>
             </form>
 
             {/* Separator */}
-            <div className="flex items-center gap-4">
-              <Separator className="flex-1" />
-              <span className="text-sm text-foreground/40">ឬ</span>
-              <Separator className="flex-1" />
+            <div className="flex items-center gap-4 my-2">
+              <Separator className="flex-1 bg-[#e0e0e0] dark:bg-zinc-800" />
+              <span className="text-[13px] text-[#7a7a7a]">ឬ</span>
+              <Separator className="flex-1 bg-[#e0e0e0] dark:bg-zinc-800" />
             </div>
 
             {/* Social Login */}
             <div className="flex flex-col gap-3">
               <Button
-                variant="tertiary"
-                className="w-full"
+                variant="outline"
+                className="w-full h-11 rounded-full border-[#e0e0e0] dark:border-zinc-800 text-[14px] font-medium text-[#1d1d1f] dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-transform active:scale-[0.95]"
                 onClick={handleGoogleLogin}
               >
-                <svg className="size-5" viewBox="0 0 16 16" fill="none">
+                <svg className="size-4 mr-2" viewBox="0 0 16 16" fill="none">
                   <path
                     fill="#4285F4"
                     d="M14.9 8.161c0-.476-.039-.954-.121-1.422h-6.64v2.695h3.802a3.24 3.24 0 01-1.407 2.127v1.75h2.269c1.332-1.22 2.097-3.02 2.097-5.15z"
@@ -211,11 +197,11 @@ export default function LoginPage() {
               </Button>
 
               <Button
-                variant="tertiary"
-                className="w-full"
+                variant="outline"
+                className="w-full h-11 rounded-full border-[#e0e0e0] dark:border-zinc-800 text-[14px] font-medium text-[#1d1d1f] dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-transform active:scale-[0.95]"
                 onClick={handleGithubLogin}
               >
-                <svg className="size-5" viewBox="0 0 24 24" fill="currentColor">
+                <svg className="size-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12,2.2467A10.00042,10.00042,0,0,0,8.83752,21.73419c.5.08752.6875-.21247.6875-.475,0-.23749-.01251-1.025-.01251-1.86249C7,19.85919,6.35,18.78423,6.15,18.22173A3.636,3.636,0,0,0,5.125,16.8092c-.35-.1875-.85-.65-.01251-.66248A2.00117,2.00117,0,0,1,6.65,17.17169a2.13742,2.13742,0,0,0,2.91248.825A2.10376,2.10376,0,0,1,10.2,16.65923c-2.225-.25-4.55-1.11254-4.55-4.9375a3.89187,3.89187,0,0,1,1.025-2.6875,3.59373,3.59373,0,0,1,.1-2.65s.83747-.26251,2.75,1.025a9.42747,9.42747,0,0,1,5,0c1.91248-1.3,2.75-1.025,2.75-1.025a3.59323,3.59323,0,0,1,.1,2.65,3.869,3.869,0,0,1,1.025,2.6875c0,3.83747-2.33752,4.6875-4.5625,4.9375a2.36814,2.36814,0,0,1,.675,1.85c0,1.33752-.01251,2.41248-.01251,2.75,0,.26251.1875.575.6875.475A10.0053,10.0053,0,0,0,12,2.2467Z" />
                 </svg>
                 បន្តជាមួយ GitHub
@@ -223,13 +209,13 @@ export default function LoginPage() {
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-2 px-8 pb-8">
-            <Separator />
-            <p className="text-center text-sm text-foreground/60 mt-4">
+          <CardFooter className="flex flex-col gap-2 px-8 pb-8 pt-4">
+            <Separator className="bg-[#e0e0e0] dark:bg-zinc-800" />
+            <p className="text-center text-[14px] text-[#7a7a7a] mt-4">
               មិនទាន់មានគណនី?{" "}
               <Link
                 href="/signup"
-                className="text-primary font-semibold hover:underline"
+                className="text-[#0066cc] dark:text-[#2997ff] font-semibold hover:underline"
               >
                 បង្កើត
               </Link>

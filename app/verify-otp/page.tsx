@@ -2,15 +2,16 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
-  Button,
   InputOTP,
-  Label,
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "@heroui/react";
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from "@/components/ui/input-otp";
+import { Label } from "@/components/ui/label";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 export default function VerifyOTPPage() {
   const [otp, setOtp] = useState("");
@@ -35,79 +36,66 @@ export default function VerifyOTPPage() {
   };
 
   return (
-    <main className="relative min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative w-full max-w-md">
-        <Card className="w-full backdrop-blur-xl bg-background/80 border border-divider">
-          <CardHeader className="flex flex-col gap-3 px-8 pt-8 pb-6">
+    <main className="relative min-h-screen flex items-center justify-center p-4 bg-[#f5f5f7] dark:bg-[#1d1d1f]">
+      <div className="relative w-full max-w-[400px]">
+        <Card className="w-full bg-white dark:bg-[#272729] border border-[#e0e0e0] dark:border-zinc-800 rounded-[18px] overflow-hidden shadow-none">
+          <CardHeader className="flex flex-col gap-3 px-8 pt-10 pb-6">
             {/* Logo */}
             <Link
               href="/"
-              className="group relative text-3xl font-bold tracking-tighter self-center mb-2"
+              className="group relative text-[28px] font-semibold tracking-[-0.28px] self-center mb-2 text-[#1d1d1f] dark:text-white"
             >
-              <span className="text-foreground">
-                រៀន
-                <span className="text-primary">២</span>
-                កូដ
-              </span>
+              រៀន<span className="text-[#0066cc] dark:text-[#2997ff]">២</span>កូដ
             </Link>
 
-            <div className="flex flex-col gap-2 text-center">
-              <h1 className="text-2xl font-bold">ផ្ទៀងផ្ទាត់គណនី</h1>
-              <p className="text-sm text-foreground/60">
+            <div className="flex flex-col gap-1 text-center">
+              <h1 className="text-[21px] font-semibold tracking-[0.231px] text-[#1d1d1f] dark:text-white">ផ្ទៀងផ្ទាត់គណនី</h1>
+              <p className="text-[14px] text-[#7a7a7a] dark:text-zinc-400">
                 យើងបានផ្ញើរលេខកូដទៅ a****@gmail.com
               </p>
             </div>
           </CardHeader>
 
-          <CardContent className="px-8 pb-8">
+          <CardContent className="px-8 pb-6">
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               {/* OTP Input */}
               <div className="flex flex-col gap-3 items-center">
                 <div className="flex flex-col gap-1 text-center">
-                  <Label className="text-base">បញ្ចូលលេខកូដ</Label>
+                  <Label className="text-[15px] font-semibold text-[#1d1d1f] dark:text-white">បញ្ចូលលេខកូដ</Label>
                 </div>
                 <InputOTP maxLength={6} value={otp} onChange={setOtp}>
-                  <InputOTP.Group>
-                    <InputOTP.Slot index={0} />
-                    <InputOTP.Slot index={1} />
-                    <InputOTP.Slot index={2} />
-                  </InputOTP.Group>
-                  <InputOTP.Separator />
-                  <InputOTP.Group>
-                    <InputOTP.Slot index={3} />
-                    <InputOTP.Slot index={4} />
-                    <InputOTP.Slot index={5} />
-                  </InputOTP.Group>
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} className="border-[#e0e0e0] dark:border-zinc-800 focus-visible:ring-[#0071e3] text-[17px]" />
+                    <InputOTPSlot index={1} className="border-[#e0e0e0] dark:border-zinc-800 focus-visible:ring-[#0071e3] text-[17px]" />
+                    <InputOTPSlot index={2} className="border-[#e0e0e0] dark:border-zinc-800 focus-visible:ring-[#0071e3] text-[17px]" />
+                  </InputOTPGroup>
+                  <InputOTPSeparator className="text-[#7a7a7a]" />
+                  <InputOTPGroup>
+                    <InputOTPSlot index={3} className="border-[#e0e0e0] dark:border-zinc-800 focus-visible:ring-[#0071e3] text-[17px]" />
+                    <InputOTPSlot index={4} className="border-[#e0e0e0] dark:border-zinc-800 focus-visible:ring-[#0071e3] text-[17px]" />
+                    <InputOTPSlot index={5} className="border-[#e0e0e0] dark:border-zinc-800 focus-visible:ring-[#0071e3] text-[17px]" />
+                  </InputOTPGroup>
                 </InputOTP>
               </div>
 
               {/* Verify Button */}
               <Button
                 type="submit"
-                
-                size="lg"
-                className="w-full font-semibold"
-                
-                isDisabled={otp.length !== 6}
+                className="w-full h-11 bg-[#0066cc] hover:bg-[#0071e3] text-white font-medium rounded-full text-[15px] transition-transform active:scale-[0.95]"
+                disabled={otp.length !== 6 || isLoading}
               >
                 {isLoading ? "កំពុងផ្ទៀងផ្ទាត់..." : "ផ្ទៀងផ្ទាត់"}
               </Button>
 
               {/* Resend Link */}
               <div className="flex items-center justify-center gap-2">
-                <p className="text-sm text-foreground/60">
+                <p className="text-[13px] text-[#7a7a7a]">
                   មិនបានទទួលលេខកូដ?
                 </p>
                 <button
                   type="button"
                   onClick={handleResend}
-                  className="text-sm text-primary hover:underline font-semibold"
+                  className="text-[13px] text-[#0066cc] dark:text-[#2997ff] hover:underline font-semibold"
                 >
                   ផ្ញើរម្តងទៀត
                 </button>
@@ -115,10 +103,11 @@ export default function VerifyOTPPage() {
             </form>
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-2 px-8 pb-8">
+          <CardFooter className="flex flex-col gap-2 px-8 pb-8 pt-4">
+            <Separator className="bg-[#e0e0e0] dark:bg-zinc-800" />
             <Link
               href="/login"
-              className="text-sm text-foreground/60 hover:text-foreground text-center"
+              className="text-[14px] text-[#7a7a7a] hover:text-[#1d1d1f] dark:hover:text-white text-center mt-4"
             >
               ← ត្រឡប់ទៅការចូល
             </Link>

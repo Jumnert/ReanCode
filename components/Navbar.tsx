@@ -1,153 +1,225 @@
-"use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useSession, signOut } from "@/lib/auth-client";
+"use client"
+
+import * as React from "react"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import { useSession, signOut } from "@/lib/auth-client"
+import { Code2, LogOut, Settings, User, UserPlus, LogIn, Menu, X } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { ThemeSwitcher } from "@/components/theme-switcher"
 import {
-  Button,
-  Input,
-  Avatar,
-  Dropdown,
-  Label,
-} from "@heroui/react";
-import { ThemeSwitcher } from "./ThemeSwitcher";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
-  BookOpen,
-  Code2,
-  Trophy,
-  User,
-  LogOut,
-  Settings,
-  LogIn,
-  UserPlus,
-} from "lucide-react";
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
 
 export default function Navbar() {
-  const router = useRouter();
-  const { data: session } = useSession();
-  const isAuthenticated = !!session?.user;
-  const user = session?.user;
+  const router = useRouter()
+  const pathname = usePathname()
+  const { data: session } = useSession()
+  const isAuthenticated = !!session?.user
+  const user = session?.user
+  const [isOpen, setIsOpen] = React.useState(false)
 
   const handleLogout = async () => {
-    await signOut();
-    router.push("/");
-  };
+    await signOut()
+    router.push("/")
+  }
+
+  const navLinks = [
+    { href: "/learn", label: "មេរៀន" },
+    { href: "/books", label: "សៀវភៅ" },
+    { href: "/exercises", label: "លំហាត់" },
+  ]
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
-      <div className="relative">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
+      <div className="max-w-7xl mx-auto h-16 flex items-center justify-between px-4 md:px-6">
+        {/* Brand Logo */}
+        <div className="flex items-center gap-6">
+          <Link href="/" className="flex items-center gap-2 font-bold text-lg md:text-xl tracking-tight text-foreground transition-opacity hover:opacity-90">
+            <Code2 className="h-6 w-6 text-[#0066cc]" />
+            <span style={{ fontFamily: "var(--font-kantumruy-pro)" }}>រៀន២កូដ</span>
+          </Link>
 
-            {/* Left — Logo & Nav */}
-            <div className="flex items-center gap-6">
-              <Link href="/" className="group relative text-2xl font-bold tracking-tighter">
-                <span className="text-foreground transition-colors">
-                  រៀន<span className="text-primary">២</span>កូដ
-                </span>
-                <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-              </Link>
-
-              <div className="hidden lg:flex items-center gap-1 text-sm">
-                <Link href="/learn">
-                  <Button variant="ghost" size="sm" className="font-semibold">
-                    <Code2 className="size-4" />
-                    មេរៀន
-                  </Button>
-                </Link>
-                <Link href="/books">
-                  <Button variant="ghost" size="sm" className="font-semibold">
-                    <BookOpen className="size-4" />
-                    សៀវភៅ
-                  </Button>
-                </Link>
-                <Link href="/exercises">
-                  <Button variant="ghost" size="sm" className="font-semibold">
-                    <Trophy className="size-4" />
-                    លំហាត់
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            {/* Center — Search */}
-            <div className="flex items-center gap-4 md:gap-6">
-              <div className="relative hidden sm:block">
-                <Input type="search" placeholder="ស្វែងរករហ័ស..." className="w-64 lg:w-80 text-sm" />
-              </div>
-            </div>
-
-            {/* Right — Auth & Theme */}
-            <div className="flex items-center gap-3">
-              {isAuthenticated && user ? (
-                <Dropdown>
-                  <Dropdown.Trigger
-                    className="rounded-full ring-2 ring-primary/50 hover:ring-primary transition-all hover:scale-110 focus:outline-none"
-                    aria-label="User menu"
-                  >
-                    <Avatar className="size-8 cursor-pointer">
-                      {user.image && (
-                        <Avatar.Image
-                          src={user.image}
-                          alt={user.name ?? "User"}
-                        />
+          {/* Desktop Navigation Menu */}
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList className="gap-1">
+              {navLinks.map((link) => (
+                <NavigationMenuItem key={link.href}>
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        navigationMenuTriggerStyle(),
+                        "bg-transparent text-muted-foreground hover:text-foreground font-medium text-sm transition-colors cursor-pointer",
+                        pathname.startsWith(link.href) && "text-[#0066cc] font-semibold bg-[#0066cc]/5"
                       )}
-                      <Avatar.Fallback>
-                        {user.name?.charAt(0).toUpperCase() ?? "U"}
-                      </Avatar.Fallback>
-                    </Avatar>
-                  </Dropdown.Trigger>
-                  <Dropdown.Popover>
-                    <Dropdown.Menu onAction={(key) => {
-                      if (key === "logout") handleLogout();
-                      if (key === "profile") router.push("/profile");
-                      if (key === "settings") router.push("/settings");
-                    }}>
-                      <Dropdown.Item id="profile" textValue="ប្រវត្តិរូប">
-                        <span className="flex items-center gap-2">
-                          <User className="size-4" />
-                          <Label>ប្រវត្តិរូប</Label>
-                        </span>
-                      </Dropdown.Item>
-                      <Dropdown.Item id="settings" textValue="ការកំណត់">
-                        <span className="flex items-center gap-2">
-                          <Settings className="size-4" />
-                          <Label>ការកំណត់</Label>
-                        </span>
-                      </Dropdown.Item>
-                      <Dropdown.Item id="logout" textValue="ចាកចេញ" variant="danger">
-                        <span className="flex items-center gap-2">
-                          <LogOut className="size-4" />
-                          <Label>ចាកចេញ</Label>
-                        </span>
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown.Popover>
-                </Dropdown>
-              ) : (
-                <>
-                  <Link href="/login">
-                    <Button variant="outline" size="md"
-                      className="font-semibold border-2 border-foreground/20 hover:border-foreground/40 hover:bg-foreground/5">
-                      <LogIn className="size-4" />
-                      ចូល
-                    </Button>
-                  </Link>
-                  <Link href="/signup">
-                    <Button variant="primary" size="md"
-                      className="font-semibold bg-blue-600 hover:bg-blue-700 text-white">
-                      <UserPlus className="size-4" />
-                      ចាប់ផ្តើម
-                    </Button>
-                  </Link>
-                </>
-              )}
+                    >
+                      {link.label}
+                    </Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
-              <ThemeSwitcher />
-            </div>
+        {/* Right Actions */}
+        <div className="flex items-center gap-3">
+          <ThemeSwitcher />
 
+          {/* Desktop Authentication controls */}
+          <div className="hidden md:flex items-center gap-3">
+            {isAuthenticated && user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar className="h-9 w-9 border border-border/80 transition-opacity hover:opacity-90 cursor-pointer">
+                    {user.image && (
+                      <AvatarImage src={user.image} alt={user.name ?? "User"} />
+                    )}
+                    <AvatarFallback className="bg-[#0066cc]/10 text-[#0066cc] text-xs font-semibold">
+                      {user.name?.charAt(0).toUpperCase() ?? "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 mt-1">
+                  <DropdownMenuLabel className="font-normal flex flex-col gap-0.5">
+                    <span className="font-semibold text-foreground">{user.name}</span>
+                    <span className="text-xs text-muted-foreground">{user.email}</span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => router.push("/profile")} className="cursor-pointer">
+                    <User className="size-4 mr-2" />
+                    <span>ប្រវត្តិរូប</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/settings")} className="cursor-pointer">
+                    <Settings className="size-4 mr-2" />
+                    <span>ការកំណត់</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600 cursor-pointer">
+                    <LogOut className="size-4 mr-2" />
+                    <span>ចាកចេញ</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" size="sm" className="text-sm font-medium hover:text-[#0066cc]">
+                    <LogIn className="size-4 mr-1.5" />
+                    ចូលគណនី
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button size="sm" className="bg-[#0066cc] hover:bg-[#0071e3] text-white rounded-full font-medium px-4">
+                    <UserPlus className="size-4 mr-1.5" />
+                    ចាប់ផ្តើម
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
+
+          {/* Mobile Sheet Trigger */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72 flex flex-col justify-between">
+              <div>
+                <SheetHeader className="text-left pb-4 border-b">
+                  <SheetTitle className="flex items-center gap-2">
+                    <Code2 className="h-5 w-5 text-[#0066cc]" />
+                    <span style={{ fontFamily: "var(--font-kantumruy-pro)" }}>រៀន២កូដ</span>
+                  </SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col gap-4 mt-6">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        "text-base font-medium text-muted-foreground transition-colors py-1.5 hover:text-foreground",
+                        pathname.startsWith(link.href) && "text-[#0066cc] font-semibold"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              <div className="border-t pt-4 flex flex-col gap-3">
+                {isAuthenticated && user ? (
+                  <>
+                    <div className="flex items-center gap-3 px-1 mb-2">
+                      <Avatar className="h-10 w-10 border">
+                        {user.image && (
+                          <AvatarImage src={user.image} alt={user.name ?? "User"} />
+                        )}
+                        <AvatarFallback className="bg-[#0066cc]/10 text-[#0066cc] text-sm font-semibold">
+                          {user.name?.charAt(0).toUpperCase() ?? "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="font-semibold text-sm">{user.name}</span>
+                        <span className="text-xs text-muted-foreground">{user.email}</span>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => { setIsOpen(false); router.push("/profile") }} className="w-full justify-start">
+                      <User className="size-4 mr-2" />
+                      ប្រវត្តិរូប
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => { setIsOpen(false); router.push("/settings") }} className="w-full justify-start">
+                      <Settings className="size-4 mr-2" />
+                      ការកំណត់
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={() => { setIsOpen(false); handleLogout() }} className="w-full justify-start mt-2">
+                      <LogOut className="size-4 mr-2" />
+                      ចាកចេញ
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" size="sm" className="w-full">
+                        <LogIn className="size-4 mr-1.5" />
+                        ចូលគណនី
+                      </Button>
+                    </Link>
+                    <Link href="/signup" onClick={() => setIsOpen(false)}>
+                      <Button size="sm" className="w-full bg-[#0066cc] hover:bg-[#0071e3] text-white">
+                        <UserPlus className="size-4 mr-1.5" />
+                        ចាប់ផ្តើម
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-    </nav>
-  );
+    </header>
+  )
 }

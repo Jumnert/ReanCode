@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Kantumruy_Pro } from "next/font/google";
+import { Kantumruy_Pro, Geist } from "next/font/google";
 import "./globals.css";
 import NavbarWrapper from "@/components/NavbarWrapper";
 
 import { Providers } from "./providers";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const kantumruyPro = Kantumruy_Pro({
   variable: "--font-kantumruy-pro",
@@ -26,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="km"
-      className={`${kantumruyPro.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", kantumruyPro.variable, "font-sans", geist.variable)}
       suppressHydrationWarning
     >
       <body

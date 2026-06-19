@@ -1,310 +1,290 @@
 "use client";
 
-import { Card, CardContent } from "@heroui/react";
+import Link from "next/link";
 
-interface Language {
-  name: string;
-  nameKh: string;
-  description: string;
-  gradient: string;
-  icon: React.ReactNode;
-}
-
-const languages: Language[] = [
+const languages = [
   {
-    name: "HTML",
-    nameKh: "ភាសា HTML",
-    description: "រចនាគំរូគេហទំព័រ",
-    gradient: "from-background to-orange-50 dark:to-orange-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 32 32"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polygon
-          points="5.902 27.201 3.655 2 28.345 2 26.095 27.197 15.985 30 5.902 27.201"
-          fill="#e44f26"
-        />
-        <polygon
-          points="16 27.858 24.17 25.593 26.092 4.061 16 4.061 16 27.858"
-          fill="#f1662a"
-        />
-        <polygon
-          points="16 13.407 11.91 13.407 11.628 10.242 16 10.242 16 7.151 15.989 7.151 8.25 7.151 8.324 7.981 9.083 16.498 16 16.498 16 13.407"
-          fill="#ebebeb"
-        />
-        <polygon
-          points="16 21.434 15.986 21.438 12.544 20.509 12.324 18.044 10.651 18.044 9.221 18.044 9.654 22.896 15.986 24.654 16 24.65 16 21.434"
-          fill="#ebebeb"
-        />
-        <polygon
-          points="15.989 13.407 15.989 16.498 19.795 16.498 19.437 20.507 15.989 21.437 15.989 24.653 22.326 22.896 22.372 22.374 23.098 14.237 23.174 13.407 22.341 13.407 15.989 13.407"
-          fill="#fff"
-        />
-        <polygon
-          points="15.989 7.151 15.989 9.071 15.989 10.235 15.989 10.242 23.445 10.242 23.445 10.242 23.455 10.242 23.517 9.548 23.658 7.981 23.732 7.151 15.989 7.151"
-          fill="#fff"
-        />
-      </svg>
-    ),
-  },
-  {
-    name: "CSS",
-    nameKh: "ភាសា CSS",
-    description: "រចនាទម្រង់គេហទំព័រ",
-    gradient: "from-background to-blue-50 dark:to-blue-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 32 32"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <polygon
-          points="5.902 27.201 3.656 2 28.344 2 26.095 27.197 15.985 30 5.902 27.201"
-          fill="#1572b6"
-        />
-        <polygon
-          points="16 27.858 24.17 25.593 26.092 4.061 16 4.061 16 27.858"
-          fill="#33a9dc"
-        />
-        <polygon
-          points="16 13.191 20.09 13.191 20.372 10.026 16 10.026 16 6.935 16.011 6.935 23.75 6.935 23.676 7.764 22.917 16.282 16 16.282 16 13.191"
-          fill="#fff"
-        />
-        <polygon
-          points="16.019 21.218 16.005 21.222 12.563 20.292 12.343 17.827 10.67 17.827 9.24 17.827 9.673 22.68 16.004 24.438 16.019 24.434 16.019 21.218"
-          fill="#ebebeb"
-        />
-        <polygon
-          points="19.827 16.151 19.455 20.29 16.008 21.22 16.008 24.436 22.344 22.68 22.391 22.158 22.928 16.151 19.827 16.151"
-          fill="#fff"
-        />
-        <polygon
-          points="16.011 6.935 16.011 8.855 16.011 10.018 16.011 10.026 8.555 10.026 8.555 10.026 8.545 10.026 8.483 9.331 8.342 7.764 8.268 6.935 16.011 6.935"
-          fill="#ebebeb"
-        />
-        <polygon
-          points="16 13.191 16 15.111 16 16.274 16 16.282 12.611 16.282 12.611 16.282 12.601 16.282 12.539 15.587 12.399 14.02 12.325 13.191 16 13.191"
-          fill="#ebebeb"
-        />
-      </svg>
-    ),
+    name: "HTML & CSS",
+    nameKh: "ភាសា HTML & CSS",
+    description: "រចនាសម្ព័ន្ធ និងសោភ័ណភាពគេហទំព័រ",
+    path: "/learn/html",
+    color: "text-orange-500",
+    bgClass: "hover:bg-orange-500/5 dark:hover:bg-orange-500/2",
+    iconPath: "/images/html.svg",
   },
   {
     name: "JavaScript",
     nameKh: "ភាសា JavaScript",
-    description: "អន្តរកម្មគេហទំព័រ",
-    gradient: "from-background to-yellow-50 dark:to-yellow-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 512 512"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect width="512" height="512" rx="15%" fill="#f7df1e" />
-        <path d="M324 370c10 17 24 29 47 29c20 0 33-10 33 -24c0-16 -13 -22 -35 -32l-12-5c-35-15 -58 -33 -58 -72c0-36 27 -64 70 -64c31 0 53 11 68 39l-37 24c-8-15 -17 -21 -31 -21c-14 0-23 9 -23 21c0 14 9 20 30 29l12 5c41 18 64 35 64 76c0 43-34 67 -80 67c-45 0-74 -21 -88 -49zm-170 4c8 13 14 25 31 25c16 0 26-6 26 -30V203h48v164c0 50-29 72 -72 72c-39 0-61 -20 -72 -44z" />
-      </svg>
-    ),
-  },
-  {
-    name: "React",
-    nameKh: "ភាសា React",
-    description: "បណ្ណាល័យ UI",
-    gradient: "from-background to-cyan-50 dark:to-cyan-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M18.6789 15.9759C18.6789 14.5415 17.4796 13.3785 16 13.3785C14.5206 13.3785 13.3211 14.5415 13.3211 15.9759C13.3211 17.4105 14.5206 18.5734 16 18.5734C17.4796 18.5734 18.6789 17.4105 18.6789 15.9759Z"
-          fill="#53C1DE"
-        />
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M24.7004 11.1537C25.2661 8.92478 25.9772 4.79148 23.4704 3.39016C20.9753 1.99495 17.7284 4.66843 16.0139 6.27318C14.3044 4.68442 10.9663 2.02237 8.46163 3.42814C5.96751 4.82803 6.73664 8.8928 7.3149 11.1357C4.98831 11.7764 1 13.1564 1 15.9759C1 18.7874 4.98416 20.2888 7.29698 20.9289C6.71658 23.1842 5.98596 27.1909 8.48327 28.5877C10.9973 29.9932 14.325 27.3945 16.0554 25.7722C17.7809 27.3864 20.9966 30.0021 23.4922 28.6014C25.9956 27.1963 25.3436 23.1184 24.7653 20.8625C27.0073 20.221 31 18.7523 31 15.9759C31 13.1835 26.9903 11.7923 24.7004 11.1537ZM24.4162 19.667C24.0365 18.5016 23.524 17.2623 22.8971 15.9821C23.4955 14.7321 23.9881 13.5088 24.3572 12.3509C26.0359 12.8228 29.7185 13.9013 29.7185 15.9759C29.7185 18.07 26.1846 19.1587 24.4162 19.667ZM22.85 27.526C20.988 28.571 18.2221 26.0696 16.9478 24.8809C17.7932 23.9844 18.638 22.9422 19.4625 21.7849C20.9129 21.6602 22.283 21.4562 23.5256 21.1777C23.9326 22.7734 24.7202 26.4763 22.85 27.526ZM9.12362 27.5111C7.26143 26.47 8.11258 22.8946 8.53957 21.2333C9.76834 21.4969 11.1286 21.6865 12.5824 21.8008C13.4123 22.9332 14.2816 23.9741 15.1576 24.8857C14.0753 25.9008 10.9945 28.557 9.12362 27.5111ZM2.28149 15.9759C2.28149 13.874 5.94207 12.8033 7.65904 12.3326C8.03451 13.5165 8.52695 14.7544 9.12123 16.0062C8.51925 17.2766 8.01977 18.5341 7.64085 19.732C6.00369 19.2776 2.28149 18.0791 2.28149 15.9759ZM9.1037 4.50354C10.9735 3.45416 13.8747 6.00983 15.1159 7.16013C14.2444 8.06754 13.3831 9.1006 12.5603 10.2265C11.1494 10.3533 9.79875 10.5569 8.55709 10.8297C8.09125 9.02071 7.23592 5.55179 9.1037 4.50354ZM20.3793 11.5771C21.3365 11.6942 22.2536 11.85 23.1147 12.0406C22.8562 12.844 22.534 13.6841 22.1545 14.5453C21.6044 13.5333 21.0139 12.5416 20.3793 11.5771ZM16.0143 8.0481C16.6054 8.66897 17.1974 9.3623 17.7798 10.1145C16.5985 10.0603 15.4153 10.0601 14.234 10.1137C14.8169 9.36848 15.414 8.67618 16.0143 8.0481ZM9.8565 14.5444C9.48329 13.6862 9.16398 12.8424 8.90322 12.0275C9.75918 11.8418 10.672 11.69 11.623 11.5748C10.9866 12.5372 10.3971 13.5285 9.8565 14.5444ZM11.6503 20.4657C10.6679 20.3594 9.74126 20.2153 8.88556 20.0347C9.15044 19.2055 9.47678 18.3435 9.85796 17.4668C10.406 18.4933 11.0045 19.4942 11.6503 20.4657ZM16.0498 23.9915C15.4424 23.356 14.8365 22.6531 14.2448 21.8971C15.4328 21.9423 16.6231 21.9424 17.811 21.891C17.2268 22.6608 16.6369 23.3647 16.0498 23.9915ZM22.1667 17.4222C22.5677 18.3084 22.9057 19.1657 23.1742 19.9809C22.3043 20.1734 21.3652 20.3284 20.3757 20.4435C21.015 19.4607 21.6149 18.4536 22.1667 17.4222ZM18.7473 20.5941C16.9301 20.72 15.1016 20.7186 13.2838 20.6044C12.2509 19.1415 11.3314 17.603 10.5377 16.0058C11.3276 14.4119 12.2404 12.8764 13.2684 11.4158C15.0875 11.2825 16.9178 11.2821 18.7369 11.4166C19.7561 12.8771 20.6675 14.4086 21.4757 15.9881C20.6771 17.5812 19.7595 19.1198 18.7473 20.5941ZM22.8303 4.4666C24.7006 5.51254 23.8681 9.22726 23.4595 10.8426C22.2149 10.5641 20.8633 10.3569 19.4483 10.2281C18.6239 9.09004 17.7698 8.05518 16.9124 7.15949C18.1695 5.98441 20.9781 3.43089 22.8303 4.4666Z"
-          fill="#53C1DE"
-        />
-      </svg>
-    ),
-  },
-  {
-    name: "Vue.js",
-    nameKh: "ភាសា Vue.js",
-    description: "ស្ថាបត្យកម្មគេហទំព័រ",
-    gradient: "from-background to-green-50 dark:to-green-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 32 32"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M24.4,3.925H30L16,28.075,2,3.925H12.71L16,9.525l3.22-5.6Z"
-          fill="#41b883"
-        />
-        <path
-          d="M2,3.925l14,24.15L30,3.925H24.4L16,18.415,7.53,3.925Z"
-          fill="#41b883"
-        />
-        <path
-          d="M7.53,3.925,16,18.485l8.4-14.56H19.22L16,9.525l-3.29-5.6Z"
-          fill="#35495e"
-        />
-      </svg>
-    ),
-  },
-  {
-    name: "TypeScript",
-    nameKh: "ភាសា TypeScript",
-    description: "JavaScript + ប្រភេទ",
-    gradient: "from-background to-blue-50 dark:to-blue-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 512 512"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect width="512" height="512" rx="15%" fill="#3178c6" />
-        <path
-          fill="#fff"
-          d="m233 284h64v-41H118v41h64v183h51zm84 173c8.1 4.2 18 7.3 29 9.4s23 3.1 35 3.1c12 0 23-1.1 34-3.4c11-2.3 20-6.1 28-11c8.1-5.3 15-12 19-21s7.1-19 7.1-32c0-9.1-1.4-17-4.1-24s-6.6-13-12-18c-5.1-5.3-11-10-18-14s-15-8.2-24-12c-6.6-2.7-12-5.3-18-7.9c-5.2-2.6-9.7-5.2-13-7.8c-3.7-2.7-6.5-5.5-8.5-8.4c-2-3-3-6.3-3-10c0-3.4.89-6.5 2.7-9.3s4.3-5.1 7.5-7.1c3.2-2 7.2-3.5 12-4.6c4.7-1.1 9.9-1.6 16-1.6c4.2 0 8.6.31 13 .94c4.6.63 9.3 1.6 14 2.9c4.7 1.3 9.3 2.9 14 4.9c4.4 2 8.5 4.3 12 6.9v-47c-7.6-2.9-16-5.1-25-6.5s-19-2.1-31-2.1c-12 0-23 1.3-34 3.8s-20 6.5-28 12c-8.1 5.4-14 12-19 21c-4.7 8.4-7 18-7 30c0 15 4.3 28 13 38c8.6 11 22 19 39 27c6.9 2.8 13 5.6 19 8.3s11 5.5 15 8.4c4.3 2.9 7.7 6.1 10 9.5c2.5 3.4 3.8 7.4 3.8 12c0 3.2-.78 6.2-2.3 9s-3.9 5.2-7.1 7.2s-7.1 3.6-12 4.8c-4.7 1.1-10 1.7-17 1.7c-11 0-22-1.9-32-5.7c-11-3.8-21-9.5-28.1-15.44z"
-        />
-      </svg>
-    ),
-  },
-  {
-    name: "Spring",
-    nameKh: "ស្ថាបត្យកម្ម Spring",
-    description: "ស្ថាបត្យកម្ម Java",
-    gradient: "from-background to-green-50 dark:to-green-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 32 32"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g fill="none" fillRule="evenodd">
-          <path d="M0 0h32v32H0z" />
-          <path
-            fill="#70AD51"
-            d="M5.466 27.993c.586.473 1.446.385 1.918-.202.475-.585.386-1.445-.2-1.92-.585-.474-1.444-.383-1.92.202-.45.555-.392 1.356.115 1.844l-.266-.234C1.972 24.762 0 20.597 0 15.978 0 7.168 7.168 0 15.98 0c4.48 0 8.53 1.857 11.435 4.836.66-.898 1.232-1.902 1.7-3.015 2.036 6.118 3.233 11.26 2.795 15.31-.592 8.274-7.508 14.83-15.93 14.83-3.912 0-7.496-1.416-10.276-3.757l-.238-.21zm23.58-4.982c4.01-5.336 1.775-13.965-.085-19.48-1.657 3.453-5.738 6.094-9.262 6.93-3.303.788-6.226.142-9.283 1.318-6.97 2.68-6.86 10.992-3.02 12.86.002 0 .23.124.227.12 0-.002 5.644-1.122 8.764-2.274 4.56-1.684 9.566-5.835 11.213-10.657-.877 5.015-5.182 9.84-9.507 12.056-2.302 1.182-4.092 1.445-7.88 2.756-.464.158-.828.314-.828.314.96-.16 1.917-.212 1.917-.212 5.393-.255 13.807 1.516 17.745-3.73z"
-          />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    name: "Kotlin",
-    nameKh: "ភាសា Kotlin",
-    description: "Android និង JVM",
-    gradient: "from-background to-purple-50 dark:to-purple-950/20",
-    icon: (
-      <svg
-        className="w-20 h-20"
-        viewBox="0 0 32 32"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient
-            id="kotlin-a"
-            x1="73.714"
-            y1="910.226"
-            x2="105.452"
-            y2="878.134"
-            gradientTransform="translate(-64.139 -782.556) scale(0.893)"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0" stopColor="#0296d8" />
-            <stop offset="1" stopColor="#8371d9" />
-          </linearGradient>
-          <linearGradient
-            id="kotlin-b"
-            x1="69.813"
-            y1="905.226"
-            x2="102.279"
-            y2="875.745"
-            gradientTransform="translate(-64.139 -782.556) scale(0.893)"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop offset="0" stopColor="#cb55c0" />
-            <stop offset="1" stopColor="#f28e0e" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M2,2V30H30v-.047l-6.95-7L16.1,15.946l6.95-7.012L29.938,2Z"
-          fill="url(#kotlin-a)"
-        />
-        <path
-          d="M16.318,2,2,16.318V30h.124L16.132,15.992l-.031-.031L23.05,8.95,29.938,2Z"
-          fill="url(#kotlin-b)"
-        />
-      </svg>
-    ),
+    description: " logic និងអន្តរកម្មលើគេហទំព័រ",
+    path: "/learn/javascript",
+    color: "text-amber-500",
+    bgClass: "hover:bg-amber-500/5 dark:hover:bg-amber-500/2",
+    iconPath: "/images/javascript.svg",
   },
   {
     name: "Python",
     nameKh: "ភាសា Python",
-    description: "ភាសាសម្រាប់ AI",
-    gradient: "from-background to-blue-50 dark:to-blue-950/20",
-    icon: (
-      <svg className="w-20 h-20" viewBox="0 0 32 32">
-        <path
-          fill="#3776ab"
-          d="M15.885 2.1c-7.1 0-6.651 3.07-6.651 3.07v3.19h6.752v1h-9.5S2.1 8.8 2.1 16.005s4.287 7.018 4.287 7.018h2.56v-3.59s-.146-4.287 4.22-4.287h6.67s4.089.063 4.089-3.967V6.234s.607-4.134-7.041-4.134zm-3.71 2.35a1.342 1.342 0 1 1 0 2.683 1.342 1.342 0 0 1 0-2.683z"
-        />
-        <path
-          fill="#ffd43b"
-          d="M16.085 29.91c7.1 0 6.651-3.07 6.651-3.07v-3.19h-6.751v-1h9.5S30 23.2 30 15.995s-4.287-7.018-4.287-7.018h-2.56v3.59s.146 4.287-4.22 4.287h-6.67s-4.089-.063-4.089 3.967v6.955s-.607 4.134 7.041 4.134h-.13zm3.71-2.35a1.342 1.342 0 1 1 0-2.683 1.342 1.342 0 0 1 0 2.683z"
-        />
-      </svg>
-    ),
+    description: "ភាសាកម្មវិធីសម្រាប់ AI & ទិន្នន័យ",
+    path: "/learn/python",
+    color: "text-blue-500",
+    bgClass: "hover:bg-blue-500/5 dark:hover:bg-blue-500/2",
+    iconPath: "/images/python.svg",
+  },
+  {
+    name: "React",
+    nameKh: "បណ្ណាល័យ React",
+    description: "កសាង UI ទំនើប និងលឿនរហ័ស",
+    path: "/learn/react",
+    color: "text-sky-400",
+    bgClass: "hover:bg-sky-500/5 dark:hover:bg-sky-500/2",
+    iconPath: "/images/react.svg",
+  },
+  {
+    name: "TypeScript",
+    nameKh: "ភាសា TypeScript",
+    description: "JavaScript ជាមួយនឹង Type សុវត្ថិភាព",
+    path: "/learn/typescript",
+    color: "text-blue-600",
+    bgClass: "hover:bg-blue-600/5 dark:hover:bg-blue-600/2",
+    iconPath: "/images/typescript.svg",
+  },
+  {
+    name: "Vue.js",
+    nameKh: "ភាសា Vue.js",
+    description: "ស្ថាបត្យកម្មគេហទំព័រទំនើប",
+    path: "/learn/vue",
+    color: "text-emerald-500",
+    bgClass: "hover:bg-emerald-500/5 dark:hover:bg-emerald-500/2",
+    iconPath: "/images/vue.svg",
+  },
+  {
+    name: "Java",
+    nameKh: "ភាសា Java",
+    description: "ភាសាកម្មវិធីលំដាប់ថ្នាក់សហគ្រាស",
+    path: "/learn/java",
+    color: "text-red-500",
+    bgClass: "hover:bg-red-500/5 dark:hover:bg-red-500/2",
+    iconPath: "/images/java.svg",
+  },
+  {
+    name: "C++",
+    nameKh: "ភាសា C++",
+    description: "ភាសាកម្មវិធីប្រព័ន្ធ និងហ្គេមល្បឿនលឿន",
+    path: "/learn/cpp",
+    color: "text-blue-700",
+    bgClass: "hover:bg-blue-700/5 dark:hover:bg-blue-700/2",
+    iconPath: "/images/cpp.svg",
+  },
+  {
+    name: "C Language",
+    nameKh: "ភាសា C",
+    description: "ភាសាកម្មវិធីគ្រឹះនៃកុំព្យូទ័រ",
+    path: "/learn/c",
+    color: "text-blue-800",
+    bgClass: "hover:bg-blue-800/5 dark:hover:bg-blue-800/2",
+    iconPath: "/images/c.svg",
+  },
+  {
+    name: "C# (C-Sharp)",
+    nameKh: "ភាសា C#",
+    description: "បង្កើតកម្មវិធី Windows និងហ្គេម Unity",
+    path: "/learn/csharp",
+    color: "text-green-600",
+    bgClass: "hover:bg-green-600/5 dark:hover:bg-green-600/2",
+    iconPath: "/images/csharp.svg",
+  },
+  {
+    name: "PHP",
+    nameKh: "ភាសា PHP",
+    description: "ភាសាកម្មវិធីសម្រាប់បង្កើត Backend Web",
+    path: "/learn/php",
+    color: "text-indigo-400",
+    bgClass: "hover:bg-indigo-500/5 dark:hover:bg-indigo-500/2",
+    iconPath: "/images/php.svg",
+  },
+  {
+    name: "Ruby",
+    nameKh: "ភាសា Ruby",
+    description: "ភាសាកម្មវិធីងាយស្រួលយល់ និងរហ័ស",
+    path: "/learn/ruby",
+    color: "text-red-600",
+    bgClass: "hover:bg-red-600/5 dark:hover:bg-red-600/2",
+    iconPath: "/images/ruby.svg",
+  },
+  {
+    name: "Go (Golang)",
+    nameKh: "ភាសា Go",
+    description: "ភាសាកម្មវិធីទំនើបសម្រាប់ Cloud & Microservices",
+    path: "/learn/go",
+    color: "text-cyan-500",
+    bgClass: "hover:bg-cyan-500/5 dark:hover:bg-cyan-500/2",
+    iconPath: "/images/go.svg",
+  },
+  {
+    name: "Rust",
+    nameKh: "ភាសា Rust",
+    description: "ភាសាកម្មវិធីប្រព័ន្ធដែលមានសុវត្ថិភាពខ្ពស់",
+    path: "/learn/rust",
+    color: "text-amber-700",
+    bgClass: "hover:bg-amber-700/5 dark:hover:bg-amber-700/2",
+    iconPath: "/images/rust.svg",
+  },
+  {
+    name: "SQL",
+    nameKh: "ភាសា SQL",
+    description: "ភាសាគ្រប់គ្រង និងទាញយកទិន្នន័យ",
+    path: "/learn/sql",
+    color: "text-zinc-800",
+    bgClass: "hover:bg-zinc-800/5 dark:hover:bg-zinc-800/2",
+    iconPath: "/images/sql.svg",
+  },
+  {
+    name: "VS Code",
+    nameKh: "កម្មវិធី VS Code",
+    description: "កម្មវិធីសរសេរកូដពេញនិយមបំផុត",
+    path: "/learn/vscode",
+    color: "text-blue-500",
+    bgClass: "hover:bg-blue-500/5 dark:hover:bg-blue-500/2",
+    iconPath: "/images/vscode.svg",
+  },
+  {
+    name: "MongoDB",
+    nameKh: "ទិន្នន័យ MongoDB",
+    description: "ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យប្រភេទ NoSQL Document",
+    path: "/learn/mongodb",
+    color: "text-green-500",
+    bgClass: "hover:bg-green-500/5 dark:hover:bg-green-500/2",
+    iconPath: "/images/mongodb.svg",
+  },
+  {
+    name: "Docker",
+    nameKh: "កម្មវិធី Docker",
+    description: "ដំណើរការកម្មវិធីក្នុង Container ឯករាជ្យ",
+    path: "/learn/docker",
+    color: "text-blue-600",
+    bgClass: "hover:bg-blue-600/5 dark:hover:bg-blue-600/2",
+    iconPath: "/images/docker.svg",
+  },
+  {
+    name: "Git & GitHub",
+    nameKh: "ប្រព័ន្ធ Git",
+    description: "គ្រប់គ្រងកំណែកូដ និងសហការការងារ",
+    path: "/learn/git",
+    color: "text-orange-600",
+    bgClass: "hover:bg-orange-600/5 dark:hover:bg-orange-600/2",
+    iconPath: "/images/git.svg",
+  },
+  {
+    name: "Swift",
+    nameKh: "ភាសា Swift",
+    description: "អភិវឌ្ឍកម្មវិធី iOS និង macOS",
+    path: "/learn/swift",
+    color: "text-orange-500",
+    bgClass: "hover:bg-orange-500/5 dark:hover:bg-orange-500/2",
+    iconPath: "/images/swift.svg",
+  },
+  {
+    name: "Next.js",
+    nameKh: "ស្ថាបត្យកម្ម Next.js",
+    description: "React Framework សម្រាប់ផលិតកម្មវិធីពេញលេញ",
+    path: "/learn/nextjs",
+    color: "text-black",
+    bgClass: "hover:bg-zinc-100 dark:hover:bg-zinc-900/50",
+    iconPath: "/images/nextjs.svg",
+  },
+  {
+    name: "Tailwind CSS",
+    nameKh: "បណ្ណាល័យ Tailwind",
+    description: "រចនាគេហទំព័រយ៉ាងរហ័សជាមួយ Utility-First CSS",
+    path: "/learn/tailwindcss",
+    color: "text-cyan-400",
+    bgClass: "hover:bg-cyan-500/5 dark:hover:bg-cyan-500/2",
+    iconPath: "/images/tailwind.svg",
+  },
+  {
+    name: "Bash & Linux",
+    nameKh: "ភាសា Bash",
+    description: "បញ្ជាម៉ាស៊ីនបម្រើ និងសរសេរ Command Line",
+    path: "/learn/bash",
+    color: "text-slate-800",
+    bgClass: "hover:bg-slate-800/5 dark:hover:bg-slate-800/2",
+    iconPath: "/images/bash.svg",
+  },
+  {
+    name: "PostgreSQL",
+    nameKh: "ទិន្នន័យ PostgreSQL",
+    description: "ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ SQL កម្រិតខ្ពស់",
+    path: "/learn/postgresql",
+    color: "text-blue-400",
+    bgClass: "hover:bg-blue-400/5 dark:hover:bg-blue-400/2",
+    iconPath: "/images/postgresql.svg",
+  },
+  {
+    name: "NPM & Node",
+    nameKh: "កម្មវិធី NPM",
+    description: "គ្រប់គ្រងកញ្ចប់កម្មវិធី និងដំណើរការ JavaScript runtime",
+    path: "/learn/npm",
+    color: "text-red-500",
+    bgClass: "hover:bg-red-500/5 dark:hover:bg-red-500/2",
+    iconPath: "/images/npm.svg",
+  },
+  {
+    name: "Markdown",
+    nameKh: "ភាសា Markdown",
+    description: "ភាសាសរសេរឯកសារ និងកំណត់ត្រាងាយស្រួល",
+    path: "/learn/markdown",
+    color: "text-slate-900",
+    bgClass: "hover:bg-slate-900/5 dark:hover:bg-slate-900/2",
+    iconPath: "/images/markdown.svg",
   },
 ];
 
 export default function LanguageCards() {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold mb-2">ភាសាកម្មវិធី</h2>
-        <p className="text-lg text-foreground/70">
-          ជ្រើសរើសភាសាសម្រាប់ចាប់ផ្តើមរៀនសូត្រ
-        </p>
-      </div>
+    <div className="w-full bg-white dark:bg-[#272729] py-16">
+      <div className="max-w-7xl mx-auto px-4">
+        
+        {/* Section Header */}
+        <div className="mb-10 text-center md:text-left flex flex-col gap-2">
+          <span className="text-[12px] font-semibold tracking-wider uppercase text-[#7a7a7a] dark:text-zinc-400">
+            មាតិកាសិក្សា
+          </span>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.28px] text-[#1d1d1f] dark:text-white">
+            ភាសាកម្មវិធីដែលមានផ្ដល់ជូន
+          </h2>
+          <p className="text-[15px] text-[#7a7a7a] dark:text-zinc-400 max-w-lg">
+            ជ្រើសរើសភាសាកម្មវិធីដែលអ្នកចង់រៀន ដើម្បីបណ្តុះជំនាញបច្ចេកវិទ្យារបស់អ្នក។
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {languages.map((lang) => (
-          <Card
-            key={lang.name}
-            className={`relative overflow-hidden bg-gradient-to-br ${lang.gradient} border border-divider cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02]`}
-          >
-            <CardContent className="p-4">
-              <div className="flex items-center gap-4">
-                {/* Left side - Logo */}
-                <div className="w-20 h-20 flex items-center justify-center flex-shrink-0">
-                  {lang.icon}
+        {/* Grid layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l border-t border-[#e0e0e0] dark:border-zinc-800">
+          {languages.map((lang) => (
+            <Link href={lang.path} key={lang.name} className="block group border-r border-b border-[#e0e0e0] dark:border-zinc-800">
+              <div className={`h-full p-6 bg-white dark:bg-[#1d1d1f] transition-all duration-300 flex items-center gap-5 cursor-pointer shadow-none ${lang.bgClass}`}>
+                
+                {/* Icon box */}
+                <div className="size-16 flex items-center justify-center flex-shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <img src={lang.iconPath} alt={lang.name} className="w-12 h-12" />
                 </div>
 
-                {/* Right side - Name + Description */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-lg text-foreground mb-1">
+                {/* Info */}
+                <div className="flex-1 min-w-0 flex flex-col">
+                  <h3 className="font-bold text-[17px] text-[#1d1d1f] dark:text-white group-hover:text-[#0066cc] dark:group-hover:text-[#2997ff] transition-colors leading-tight">
                     {lang.name}
                   </h3>
-                  <p className="text-sm text-foreground/70 font-medium mb-1">
+                  <span className="text-[13px] text-[#7a7a7a] dark:text-zinc-400 font-medium mt-0.5">
                     {lang.nameKh}
-                  </p>
-                  <p className="text-xs text-foreground/60">
+                  </span>
+                  <p className="text-[13px] text-[#7a7a7a] dark:text-zinc-450 mt-1 leading-snug">
                     {lang.description}
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            </Link>
+          ))}
+        </div>
+
       </div>
     </div>
   );
