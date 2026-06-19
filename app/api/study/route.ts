@@ -57,7 +57,8 @@ export async function GET(req: NextRequest) {
     })
 
     // Format for the contribution graph
-    const formattedActivities = activities.map(a => {
+    type ActivityItem = (typeof activities)[number]
+    const formattedActivities = activities.map((a: ActivityItem) => {
       const count = a.count
       return {
         date: a.date.toISOString().split('T')[0],

@@ -89,7 +89,8 @@ export async function GET(req: NextRequest) {
       }
     });
 
-    const completedChapterIds = completedProgress.map(p => p.lesson?.slug).filter(Boolean);
+    type ProgressItem = (typeof completedProgress)[number]
+    const completedChapterIds = completedProgress.map((p: ProgressItem) => p.lesson?.slug).filter(Boolean);
     return ApiResponse.success({ completed: completedChapterIds });
   } catch (error) {
     console.error("Error in GET /api/progress/html:", error);
