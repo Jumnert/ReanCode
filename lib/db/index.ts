@@ -1,13 +1,3 @@
-import { PrismaClient } from '@prisma/client'
-
-const prismaClientSingleton = () => {
-  return new PrismaClient()
-}
-
-declare const globalThis: {
-  prismaGlobal: ReturnType<typeof prismaClientSingleton>;
-} & typeof global;
-
-export const db = globalThis.prismaGlobal ?? prismaClientSingleton()
-
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = db
+// Re-export the canonical Prisma singleton so any future imports from
+// "@/lib/db" keep working without duplicating the client setup.
+export { prisma as db, prisma, default } from '@/config/prisma'
