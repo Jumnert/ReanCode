@@ -8,7 +8,7 @@ const envSchema = z.object({
 
   // NextAuth
   NEXTAUTH_SECRET: z.string().min(32),
-  NEXTAUTH_URL: z.string().url(),
+  NEXTAUTH_URL: z.string().url().optional(), // Deprecated in NextAuth v5 — auto-detected
 
   // OAuth
   GOOGLE_CLIENT_ID: z.string().optional(),
@@ -47,6 +47,10 @@ const envSchema = z.object({
 export type Env = z.infer<typeof envSchema>;
 
 function validateEnv(): Env {
+  // Skip validation during build — env vars are only available at runtime
+  if (process.env.SKIP_ENV_VALIDATION === "1") {
+    return process.env as unknown as Env;
+  }
   try {
     return envSchema.parse(process.env);
   } catch (error) {
