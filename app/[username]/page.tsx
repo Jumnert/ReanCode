@@ -1,6 +1,5 @@
 import React from "react"
 import { prisma } from "@/config/prisma"
-import { StudyActivity } from "@prisma/client"
 import { notFound } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { StudyContributions } from "@/components/study-contributions"
@@ -48,9 +47,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const oneYearAgo = new Date()
   oneYearAgo.setDate(today.getDate() - 365)
   
+  type StudyActivityItem = (typeof user.studyActivity)[number]
   const formattedActivities = user.studyActivity
-    .filter((a: StudyActivity) => new Date(a.date) >= oneYearAgo)
-    .map((a: StudyActivity) => {
+    .filter((a: StudyActivityItem) => new Date(a.date) >= oneYearAgo)
+    .map((a: StudyActivityItem) => {
       const count = a.count
       return {
         date: new Date(a.date).toISOString().split('T')[0],
