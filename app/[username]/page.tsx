@@ -47,8 +47,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const oneYearAgo = new Date()
   oneYearAgo.setDate(today.getDate() - 365)
   
+  type ActivityItem = { date: string; count: number; level: number }
   type StudyActivityItem = (typeof user.studyActivity)[number]
-  const formattedActivities = user.studyActivity
+  const formattedActivities: ActivityItem[] = user.studyActivity
     .filter((a: StudyActivityItem) => new Date(a.date) >= oneYearAgo)
     .map((a: StudyActivityItem) => {
       const count = a.count
@@ -63,14 +64,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const todayStr = today.toISOString().split('T')[0]
   const oneYearAgoStr = oneYearAgo.toISOString().split('T')[0]
   
-  if (!formattedActivities.find(a => a.date === oneYearAgoStr)) {
+  if (!formattedActivities.find((a: ActivityItem) => a.date === oneYearAgoStr)) {
     formattedActivities.push({ date: oneYearAgoStr, count: 0, level: 0 })
   }
-  if (!formattedActivities.find(a => a.date === todayStr)) {
+  if (!formattedActivities.find((a: ActivityItem) => a.date === todayStr)) {
     formattedActivities.push({ date: todayStr, count: 0, level: 0 })
   }
 
-  const activities = formattedActivities.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  const activities = formattedActivities.sort((a: ActivityItem, b: ActivityItem) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   return (
     <div className="min-h-screen bg-background pb-20">
