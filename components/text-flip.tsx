@@ -1,5 +1,3 @@
-"use client"
-
 import { Children, useEffect, useState } from "react"
 import type { Transition, Variants } from "motion/react"
 import { AnimatePresence, motion } from "motion/react"

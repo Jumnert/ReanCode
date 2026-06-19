@@ -560,3 +560,39 @@ The structural breakpoints that matter for agents: 1440px (content lock), 1068px
 - Dark-mode counterparts for store and accessories utility cards were not surfaced on the analyzed pages; the system documented is the daytime/light-dominant variant Apple ships by default.
 - Atmospheric photography (environment page mountain vista) is a content asset, not a design token; the documented `{component.environment-quote-card}` describes the structural surface only.
 - The exact backdrop-filter blur radius on `{component.sub-nav-frosted}` and `{component.floating-sticky-bar}` is platform-dependent; production CSS uses `saturate(180%) blur(20px)` as a typical baseline but the value isn't formalized as a token.
+
+## Editorial Line & Grid Design
+
+The interface employs a strict, architectural grid framed by 2px lines (`border-primary/20`), creating an editorial or blueprint-like aesthetic.
+
+- **Global Container**: `max-w-7xl mx-auto border-x-2 border-primary/20` frames the primary content column, giving it sharp left/right boundaries against the viewport.
+- **Horizontal Dividers**: Explicit `<hr className="border-t-2 border-primary/20 w-full" />` lines separate major vertical sections, avoiding whitespace ambiguity.
+- **Internal Grids**: Components like `LanguageCards` use internal 2px grids (`border-l-2`, `border-t-2` on parents; `border-r-2`, `border-b-2` on children) to create precise, non-overlapping matrix layouts.
+- **Geometry**: The layout favors sharp, squared intersections where lines meet. Rounded corners (`rounded-[18px]`) are used sparingly on internal content cards (like the Hero Carousel or abstract visuals) to contrast against the rigid exterior grid lines.
+- **Transparency**: The lines use a 20% opacity of the primary brand color (`primary/20`), ensuring they provide structural framing without overwhelming the content or competing with primary interactive elements.
+
+## Multisensory Interaction (Haptics & Sound)
+
+The interface integrates `@ncdai/haptic` and `@ncdai/use-sound` to provide physical and auditory feedback, elevating the premium feel. Each interaction type has a distinct multisensory signature:
+
+- **Primary Actions (Buttons, Links)**: 
+  - Haptic: `medium` (provides a solid, confident tactile response).
+  - Sound: Distinct "click" or "pop" sound to confirm intent.
+- **Micro-Interactions & Navigation (Swipes, Carousel Slides)**:
+  - Haptic: `light` (subtle physical detent, like scrolling a mechanical wheel).
+  - Sound: Soft "slide" or "whoosh" sound, complementing the smooth visual motion.
+- **Destructive/Error States**:
+  - Haptic: `heavy` (sharp, unmissable feedback).
+  - Sound: "Error" or "thud" sound to alert the user.
+- **Success/Completion**:
+  - Haptic: `success` (a multi-beat rhythmic vibration).
+  - Sound: "Chime" or pleasant harmonic sound.
+
+## Pattern Separators
+
+To separate distinct sections without relying on solid backgrounds or shadows, use diagonal striped pattern dividers. This maintains the wireframe, blueprint aesthetic while providing clear visual breaks.
+
+Example code for a diagonal separator:
+```html
+<div className="h-8 border-t border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(156, 146, 72, 0.1) 4px, rgba(156, 146, 172, 0.1) 5px)' }}></div>
+```

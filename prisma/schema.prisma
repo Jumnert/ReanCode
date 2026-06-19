@@ -14,6 +14,7 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
+  username      String?   @unique
   emailVerified DateTime?
   name          String?
   password      String? // Hashed password for credentials login
@@ -21,6 +22,12 @@ model User {
   image         String? // For NextAuth compatibility
   bannerUrl     String?
   bio           String?   @db.Text
+  location      String?
+  phone         String?
+  pronouns      String?
+  title         String?
+  portfolioUrl  String?
+  techStack     Json?     // Array of { id, category, items: string[] }
   role          String    @default("user") // user, admin, moderator
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -36,8 +43,23 @@ model User {
   solutions    Solution[]
   snippets     CodeSnippet[]
   achievements UserAchievement[]
+  studyActivity StudyActivity[]
 
   @@index([email])
+  @@index([username])
+}
+
+// Activity Tracking
+model StudyActivity {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @db.Date // Stored as a date (YYYY-MM-DD)
+  count     Int      @default(0)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
 }
 
 // NextAuth v5 Session Model
