@@ -216,29 +216,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <>
                   <EditProfileModal user={user} />
                   <EditExperienceModal />
-                  <AlertDialog>
-                    <AlertDialogTrigger 
-                      render={<Button variant="outline" size="sm" className="gap-2 font-mono border-destructive/20 hover:bg-destructive/5 text-destructive hover:text-destructive" />}
-                    >
-                      <LogOut className="w-4 h-4" /> Logout
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This will securely log you out of your account on this device.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <form action={logoutAction}>
-                          <Button type="submit" variant="destructive" className="font-mono">
-                            Yes, Logout
-                          </Button>
-                        </form>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
                 </>
               ) : (
                 <div className="px-3 py-1.5 border border-primary/20 rounded-md text-xs font-mono text-primary bg-primary/5 flex items-center gap-2">
