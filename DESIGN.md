@@ -590,9 +590,57 @@ The interface integrates `@ncdai/haptic` and `@ncdai/use-sound` to provide physi
 
 ## Pattern Separators
 
-To separate distinct sections without relying on solid backgrounds or shadows, use diagonal striped pattern dividers. This maintains the wireframe, blueprint aesthetic while providing clear visual breaks.
+To separate distinct sections without relying on solid backgrounds or shadows, use diagonal striped pattern dividers (add this before a component). This maintains the wireframe, blueprint aesthetic while providing clear visual breaks.
 
 Example code for a diagonal separator:
 ```html
-<div className="h-8 border-t border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(156, 146, 72, 0.1) 4px, rgba(156, 146, 172, 0.1) 5px)' }}></div>
+<div className="h-8 border-y border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }}></div>
+```
+
+## Course Navigation Buttons
+
+To maintain a consistent look across all programming language tutorials (HTML, JS, etc.), use the following exact standard for the "Next Chapter" and "Back" navigation buttons at the bottom of the learning pages. Do not use language-specific branding colors (like yellow for JS) for these primary structural buttons; always use the global theme `primary` color.
+
+**Back Button (Secondary/Neutral):**
+```html
+className="px-6 py-2.5 rounded-lg border border-border bg-background hover:bg-muted text-foreground disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium flex items-center gap-2"
+```
+
+**Next Chapter Button (Primary):**
+```html
+className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm flex items-center gap-2"
+```
+
+## Gamification & Completion Effects (Confetti)
+
+To create a rewarding experience and gamify the learning process, trigger a visual confetti effect ("graffiti") whenever the user completes a chapter (clicks "Next Chapter") or skips the login prompt ("Skip" or "រំលង").
+
+**Implementation Details:**
+- Library: `canvas-confetti`
+- Parameters:
+  ```javascript
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors: ['#0066cc', '#0071e3', '#f5f5f7', '#ffd700']
+  });
+  ```
+- Trigger Points: Inside `advanceChapter()` or directly inside the `onClick` handler of the "Next" button and "Skip" (រំលង) action in the AlertDialog.
+
+## Copy to Clipboard Actions
+
+For any code snippets, examples, or copyable text areas, use the `@ncdai/copy-button` component instead of standard buttons or custom copy handlers. This provides built-in visual and haptic feedback, handling the full lifecycle of the copy action (idle, copied, error).
+
+**Usage:**
+```tsx
+import { CopyButton } from "@/components/copy-button"
+
+// Inside your component:
+<CopyButton
+  text={codeToCopy}
+  onCopySuccess={() => toast.success("ចម្លងកូដទុកជោគជ័យ!")}
+  variant="ghost"
+  size="sm"
+/>
 ```

@@ -79,3 +79,8 @@ To add components from this registry, use:
 - `@ncdai/theme-toggle-effect-polygon-gradient`
 - `@ncdai/thin-scrollbar`
 <!-- SHADCN-AGENTS-MD-END -->
+
+# Caching Policy
+Implement caching for everything that should be cached (like Books, Leaderboard, Courses, etc.) to minimize database requests.
+Use `@upstash/redis` configured in `src/config/redis.ts`. 
+Always check the cache first before querying Prisma, and store the result in cache after retrieving it.

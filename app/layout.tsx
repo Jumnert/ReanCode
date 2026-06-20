@@ -4,6 +4,7 @@ import "./globals.css";
 import NavbarWrapper from "@/components/NavbarWrapper";
 
 import { Providers } from "./providers";
+import { ConsentManager } from "@/components/consent-manager";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({
@@ -50,8 +51,10 @@ export default function RootLayout({
  className="min-h-full flex flex-col bg-background text-foreground font-sans"
  >
  <Providers>
- <NavbarWrapper />
- {children}
+   <ConsentManager>
+     <NavbarWrapper />
+     {children}
+   </ConsentManager>
  </Providers>
  </body>
  </html>

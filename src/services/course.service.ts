@@ -34,7 +34,11 @@ export class CourseService {
 
   // Get single course by slug
   static async getBySlug(slug: string) {
-    return prisma.course.findUnique({
+    const cacheKey = CacheKeys.course(slug);
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as any;
+
+    const course = await prisma.course.findUnique({
       where: { slug },
       include: {
         lessons: {
@@ -49,8 +53,16 @@ export class CourseService {
             order: true,
           },
         },
+        _count: {
+          select: { lessons: true },
+        },
       },
     });
+
+    if (course) {
+      await redis.setex(cacheKey, CacheTTL.LONG, JSON.stringify(course));
+    }
+    return course;
   }
 
   // Create course (admin)

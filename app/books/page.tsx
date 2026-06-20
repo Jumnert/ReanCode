@@ -1,8 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Download, BookOpen, Search } from "lucide-react";
 import { haptic } from "../../src/lib/haptic";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
 
 const goalKickerBooks = [
   {
@@ -259,6 +263,17 @@ const goalKickerBooks = [
 
 export default function BooksPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.from(".book-card", {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.05,
+      ease: "power3.out",
+    });
+  }, { scope: container, dependencies: [searchQuery] });
 
   const handleDownload = () => {
     haptic();
@@ -269,7 +284,7 @@ export default function BooksPage() {
   );
 
   return (
-    <div className="w-full bg-background min-h-screen">
+    <div className="w-full bg-background min-h-screen" ref={container}>
       <div className="max-w-7xl mx-auto border-x-2 border-primary/20">
         <div>
           {/* Header */}
@@ -300,14 +315,18 @@ export default function BooksPage() {
           </div>
         </div>
 
+        {/* Diagonal Separator */}
+        <div className="h-8 border-y-2 border-primary/20" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, var(--primary-10, rgba(204, 120, 92, 0.1)) 4px, var(--primary-10, rgba(204, 120, 92, 0.1)) 5px)' }}></div>
+
         {/* Strict Grid */}
         {filteredBooks.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 border-t-2 border-primary/20">
-            {filteredBooks.map((book) => (
-              <div
-                key={book.name}
-                className="relative flex flex-col aspect-[3/4] border-r-2 border-b-2 border-primary/20 overflow-hidden group bg-primary/5 p-2 md:p-3 transition-colors hover:bg-primary/10"
-              >
+          <div className="overflow-hidden">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 -mr-[2px]">
+              {filteredBooks.map((book) => (
+                <div
+                  key={book.name}
+                  className="book-card relative flex flex-col aspect-[3/4] border-r-2 border-b-2 border-primary/20 overflow-hidden group bg-primary/5 p-2 md:p-3 transition-colors hover:bg-primary/10"
+                >
                 {/* Book Poster Container */}
                 <div className="relative w-full h-full rounded-lg overflow-hidden shadow-sm group-hover:shadow-xl transition-shadow duration-300 bg-white">
                   {/* Full Background Image */}
@@ -346,7 +365,8 @@ export default function BooksPage() {
                   </div>
                 </div>
               </div>
-            ))}
+              ))}
+            </div>
           </div>
         ) : (
           <div className="py-20 text-center border-2 border-dashed border-border rounded-xl">

@@ -4,6 +4,7 @@ import HeroCarousel from "@/components/HeroCarousel";
 import LanguageCards from "@/components/LanguageCards";
 import { FluidGradientText } from "@/components/fluid-gradient-text";
 import { AngkorWatAbstract } from "@/components/AngkorWatAbstract";
+import HomeRoadmapPreview from "@/components/HomeRoadmapPreview";
 import Link from "next/link";
 
 export default function Home() {
@@ -81,15 +82,23 @@ export default function Home() {
  </div>
 
   {/* Bottom Line */}
-  <hr className="border-t-2 border-primary/20 w-full" />
+  <div className="h-8 border-y border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }} />
 
  {/* Tile 3: Integrated Language Cards Grid */}
  <div className="w-full max-w-7xl mx-auto border-x-2 border-primary/20">
  <LanguageCards />
  </div>
 
+  {/* Line before Roadmap */}
+  <div className="h-8 border-y border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }} />
+
+   {/* Roadmap Preview Section */}
+  <div className="w-full max-w-7xl mx-auto border-x-2 border-primary/20 bg-background">
+    <HomeRoadmapPreview />
+  </div>
+
   {/* Footer Top Line */}
-  <hr className="border-t-2 border-primary/20 w-full" />
+  <div className="h-8 border-y border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }} />
 
   {/* Parchment Footer Segment */}
   <div className="w-full max-w-7xl mx-auto border-x-2 border-primary/20 relative overflow-hidden bg-background">

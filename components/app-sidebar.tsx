@@ -105,13 +105,104 @@ const htmlChapters = [
  }
 ]
 
+const javascriptChapters = [
+  {
+    title: "JS Tutorial",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Introduction & Basics",
+        icon: Layers,
+        subItems: [
+          { title: "JS Home", id: "home", label: "JS Home" },
+          { title: "JS Introduction", id: "intro", label: "JS Introduction" },
+          { title: "JS Where To", id: "whereto", label: "JS Where To" },
+          { title: "JS Output", id: "output", label: "JS Output" },
+          { title: "JS Syntax", id: "syntax", label: "JS Syntax" },
+          { title: "JS Operators", id: "operators", label: "JS Operators" },
+          { title: "JS If Conditions", id: "conditions", label: "JS If Conditions" },
+          { title: "JS Loops", id: "loops", label: "JS Loops" },
+          { title: "JS Strings", id: "strings", label: "JS Strings" },
+          { title: "JS Numbers", id: "numbers", label: "JS Numbers" },
+          { title: "JS Functions", id: "functions", label: "JS Functions" },
+          { title: "JS Objects", id: "objects", label: "JS Objects" },
+          { title: "JS Scope", id: "scope", label: "JS Scope" },
+          { title: "JS Dates", id: "dates", label: "JS Dates" },
+          { title: "JS Temporal New", id: "temporal", label: "JS Temporal New" },
+          { title: "JS Arrays", id: "arrays", label: "JS Arrays" },
+          { title: "JS Sets", id: "sets", label: "JS Sets" },
+          { title: "JS Maps", id: "maps", label: "JS Maps" },
+          { title: "JS Iterations", id: "iterations", label: "JS Iterations" },
+          { title: "JS Math", id: "math", label: "JS Math" },
+          { title: "JS RegExp", id: "regexp", label: "JS RegExp" },
+          { title: "JS Data Types", id: "datatypes", label: "JS Data Types" },
+          { title: "JS Errors", id: "errors", label: "JS Errors" },
+          { title: "JS Debugging", id: "debugging", label: "JS Debugging" },
+          { title: "JS Style Guide", id: "styleguide", label: "JS Style Guide" },
+          { title: "JS Reference", id: "reference", label: "JS Reference" },
+          { title: "JS Projects New", id: "projects", label: "JS Projects New" },
+          { title: "JS Versions", id: "versions", label: "JS Versions" },
+        ]
+      }
+    ]
+  },
+  {
+    title: "JS HTML DOM",
+    icon: LayoutGrid,
+    items: [
+      {
+        title: "DOM",
+        icon: LayoutGrid,
+        subItems: [
+          { title: "JS HTML DOM", id: "htmldom", label: "JS HTML DOM" },
+          { title: "JS HTML Events", id: "htmlevents", label: "JS HTML Events" },
+          { title: "JS HTML First", id: "htmlfirst", label: "JS HTML First" },
+        ]
+      }
+    ]
+  },
+  {
+    title: "JS Advanced",
+    icon: Type,
+    items: [
+      {
+        title: "Advanced",
+        icon: Type,
+        subItems: [
+          { title: "JS Advanced", id: "advanced", label: "JS Advanced" },
+          { title: "JS Functions Advanced", id: "functions_adv", label: "JS Functions Advanced" },
+          { title: "JS Objects Advanced", id: "objects_adv", label: "JS Objects Advanced" },
+          { title: "JS Classes", id: "classes", label: "JS Classes" },
+          { title: "JS Asynchronous", id: "async", label: "JS Asynchronous" },
+          { title: "JS Modules", id: "modules", label: "JS Modules" },
+          { title: "JS Meta & Proxy", id: "meta", label: "JS Meta & Proxy" },
+          { title: "JS Typed Arrays", id: "typedarrays", label: "JS Typed Arrays" },
+          { title: "JS DOM Navigation", id: "domnav", label: "JS DOM Navigation" },
+          { title: "JS Windows", id: "windows", label: "JS Windows" },
+          { title: "JS Web API", id: "webapi", label: "JS Web API" },
+          { title: "JS AJAX", id: "ajax", label: "JS AJAX" },
+          { title: "JS JSON", id: "json", label: "JS JSON" },
+          { title: "JS jQuery", id: "jquery", label: "JS jQuery" },
+          { title: "JS Graphics", id: "graphics", label: "JS Graphics" },
+          { title: "JS Examples", id: "examples", label: "JS Examples" },
+          { title: "JS Reference Advanced", id: "reference_adv", label: "JS Reference Advanced" },
+        ]
+      }
+    ]
+  }
+]
+
 export function AppSidebar() {
   const pathname = usePathname()
+  const isJs = pathname?.includes("/learn/javascript") ?? false
+  const chapters = isJs ? javascriptChapters : htmlChapters
+  const groupLabel = isJs ? "មេរៀន JavaScript" : "មេរៀន HTML"
+  const progressEndpoint = isJs ? "/api/progress/javascript" : "/api/progress/html"
   const [activeItem, setActiveItem] = React.useState("intro")
   const [completedChapters, setCompletedChapters] = React.useState<string[]>([])
 
   React.useEffect(() => {
-    fetch('/api/progress/html')
+    fetch(progressEndpoint)
       .then(r => r.json())
       .then(res => {
         if (res.success && res.data?.completed) {
@@ -119,7 +210,7 @@ export function AppSidebar() {
         }
       })
       .catch(console.error);
-  }, []);
+  }, [progressEndpoint]);
 
   React.useEffect(() => {
     const handler = (e: any) => {
@@ -131,8 +222,8 @@ export function AppSidebar() {
 
  // Collect all section IDs from the chapter data
  const allIds = React.useMemo(
- () => htmlChapters.flatMap(c => c.items.flatMap(i => i.subItems.map(s => s.id))),
- []
+ () => chapters.flatMap(c => c.items.flatMap(i => i.subItems.map(s => s.id))),
+ [chapters]
  )
 
   // Use CustomEvents for syncing between Sidebar and Page instead of intersection observers
@@ -152,11 +243,11 @@ export function AppSidebar() {
  <SidebarContent className="py-4 gap-0">
  <SidebarGroup>
  <SidebarGroupLabel className="px-4 text-xs font-semibold tracking-wider text-sidebar-foreground/75 uppercase">
- មេរៀន HTML
+ {groupLabel}
  </SidebarGroupLabel>
  <SidebarGroupContent>
  <SidebarMenu>
- {htmlChapters.map((chapter, cIndex) => {
+ {chapters.map((chapter, cIndex) => {
  const ChapterIcon = chapter.icon || BookOpen
  return (
  <Collapsible key={cIndex} defaultOpen className="group/collapsible" asChild>

@@ -99,7 +99,8 @@ function getAuthConfig() {
         if (user) {
           token.id = user.id as string;
           token.role = (user.role as string) || "user";
-          if (user.image) token.picture = user.image;
+          const img = user.avatarUrl || user.image;
+          if (img) token.picture = img;
         }
 
         // OAuth sign in - store provider info

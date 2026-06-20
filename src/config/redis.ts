@@ -19,6 +19,10 @@ export const CacheKeys = {
 
   // Books
   bookDownloads: (bookId: string) => `book:${bookId}:downloads`,
+  bookList: (category?: string) => category ? `books:${category}` : `books:all`,
+  book: (slug: string) => `book:${slug}`,
+  bookCategories: () => `books:categories`,
+  bookSearch: (query: string) => `books:search:${query.toLowerCase()}`,
 
   // Leaderboard
   leaderboardWeekly: () => `leaderboard:weekly`,
@@ -27,6 +31,7 @@ export const CacheKeys = {
   // Content cache
   courseList: (category?: string) =>
     category ? `courses:${category}` : `courses:all`,
+  course: (slug: string) => `course:${slug}`,
 };
 
 // Cache TTL (in seconds)

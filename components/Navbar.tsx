@@ -8,7 +8,8 @@ import { Code2, LogOut, Settings, User, UserPlus, LogIn, Menu, X } from "lucide-
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { ThemeSwitcher } from "@/components/theme-switcher"
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
+import { useTheme } from "next-themes"
 import {
  DropdownMenu,
  DropdownMenuContent,
@@ -18,32 +19,37 @@ import {
  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
- NavigationMenu,
- NavigationMenuItem,
- NavigationMenuLink,
- NavigationMenuList,
- navigationMenuTriggerStyle,
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 
 export default function Navbar() {
+ const { data: session } = useSession()
+ const { theme, setTheme, resolvedTheme } = useTheme()
  const router = useRouter()
  const pathname = usePathname()
- const { data: session } = useSession()
  const isAuthenticated = !!session?.user
  const user = session?.user
  const [isOpen, setIsOpen] = React.useState(false)
 
  const handleLogout = async () => {
- await signOut()
- router.push("/")
+   await signOut()
+   window.location.href = "/"
+   window.location.reload()
  }
 
  const navLinks = [
- { href: "/learn", label: "មេរៀន" },
  { href: "/books", label: "សៀវភៅ" },
  { href: "/exercises", label: "លំហាត់" },
+ { href: "/roadmaps", label: "ផែនទីរៀន" },
+ { href: "/leaderboard", label: "ចំណាត់ថ្នាក់" },
  ]
 
  return (
@@ -81,7 +87,12 @@ export default function Navbar() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3">
- <ThemeSwitcher />
+ <AnimatedThemeToggler 
+    variant="circle" 
+    duration={700}
+    theme={resolvedTheme as "light" | "dark"} 
+    onThemeChange={setTheme} 
+  />
 
  {/* Desktop Authentication controls */}
  <div className="hidden md:flex items-center gap-3">
@@ -89,7 +100,7 @@ export default function Navbar() {
   <Link href="/profile">
     <Avatar className="h-9 w-9 border border-border/80 transition-transform hover:scale-105 cursor-pointer shadow-sm">
       {user.image && (
-        <AvatarImage src={user.image} alt={user.name ?? "User"} />
+        <AvatarImage src={user.image} alt={user.name ?? "User"} referrerPolicy="no-referrer" />
       )}
       <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
         {user.name?.charAt(0).toUpperCase() ?? "U"}
@@ -153,7 +164,7 @@ export default function Navbar() {
  <div className="flex items-center gap-3 px-1 mb-2">
  <Avatar className="h-10 w-10 border">
  {user.image && (
- <AvatarImage src={user.image} alt={user.name ?? "User"} />
+ <AvatarImage src={user.image} alt={user.name ?? "User"} referrerPolicy="no-referrer" />
  )}
  <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
  {user.name?.charAt(0).toUpperCase() ?? "U"}

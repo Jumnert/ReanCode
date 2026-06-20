@@ -1,13 +1,17 @@
 // Book Service
 import { prisma } from "@/config/prisma";
-import { redis, CacheKeys } from "@/config/redis";
+import { redis, CacheKeys, CacheTTL } from "@/config/redis";
 import { uploadBook, uploadBookCover } from "@/config/cloudinary";
 import { Prisma } from "@prisma/client";
 
 export class BookService {
   // Get all books
   static async getAll(category?: string) {
-    return prisma.book.findMany({
+    const cacheKey = CacheKeys.bookList(category);
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as any; // Type assertion since redis returns any or string/object
+
+    const books = await prisma.book.findMany({
       where: {
         published: true,
         ...(category && { category }),
@@ -19,11 +23,18 @@ export class BookService {
         },
       },
     });
+
+    await redis.setex(cacheKey, CacheTTL.LONG, JSON.stringify(books));
+    return books;
   }
 
   // Get single book
   static async getBySlug(slug: string) {
-    return prisma.book.findUnique({
+    const cacheKey = CacheKeys.book(slug);
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as any;
+
+    const book = await prisma.book.findUnique({
       where: { slug },
       include: {
         _count: {
@@ -31,6 +42,11 @@ export class BookService {
         },
       },
     });
+
+    if (book) {
+      await redis.setex(cacheKey, CacheTTL.LONG, JSON.stringify(book));
+    }
+    return book;
   }
 
   // Create book (admin)
@@ -105,16 +121,27 @@ export class BookService {
 
   // Get book categories
   static async getCategories() {
-    return prisma.book.groupBy({
+    const cacheKey = CacheKeys.bookCategories();
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as any;
+
+    const categories = await prisma.book.groupBy({
       by: ["category"],
       where: { published: true },
       _count: true,
     });
+
+    await redis.setex(cacheKey, CacheTTL.LONG, JSON.stringify(categories));
+    return categories;
   }
 
   // Search books
   static async search(query: string) {
-    return prisma.book.findMany({
+    const cacheKey = CacheKeys.bookSearch(query);
+    const cached = await redis.get(cacheKey);
+    if (cached) return cached as any;
+
+    const books = await prisma.book.findMany({
       where: {
         published: true,
         OR: [
@@ -125,6 +152,9 @@ export class BookService {
       },
       take: 20,
     });
+
+    await redis.setex(cacheKey, CacheTTL.SHORT, JSON.stringify(books));
+    return books;
   }
 }
 

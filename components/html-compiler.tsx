@@ -5,8 +5,28 @@ import dynamic from "next/dynamic"
 import { useTheme } from "next-themes"
 import { Play, RotateCcw, Copy, Check, Maximize2, Minimize2, Code2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { CopyButton } from "@/components/copy-button"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+
+const playChime = () => {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(880, ctx.currentTime); 
+    osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1); 
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.3);
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false })
 
@@ -125,10 +145,19 @@ export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = 
  </div>
 
  <div className="flex items-center gap-1">
- <Button variant="ghost" size="sm" onClick={copyCode}
- className={cn("h-6 w-6 p-0", toolbarBtn)}>
- {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
- </Button>
+  <CopyButton
+    text={code}
+    onCopySuccess={() => {
+      playChime()
+      toast("ចម្លងកូដទុកជោគជ័យ!", {
+        icon: <Check className="h-4 w-4" />,
+        className: "bg-primary text-primary-foreground border-primary [&>svg]:text-primary-foreground"
+      })
+    }}
+    variant="ghost"
+    size="sm"
+    className={cn("h-6 w-6 p-0", toolbarBtn)}
+  />
  <Button variant="ghost" size="sm" onClick={resetCode}
  className={cn("h-6 w-6 p-0", toolbarBtn)}>
  <RotateCcw className="h-3 w-3" />

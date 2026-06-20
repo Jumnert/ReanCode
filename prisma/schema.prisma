@@ -44,6 +44,7 @@ model User {
   snippets     CodeSnippet[]
   achievements UserAchievement[]
   studyActivity StudyActivity[]
+  workExperiences WorkExperience[]
 
   @@index([email])
   @@index([username])
@@ -59,6 +60,21 @@ model StudyActivity {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date])
+  @@index([userId])
+}
+
+model WorkExperience {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyName     String
+  companyLogo     String?
+  companyWebsite  String?
+  isCurrentEmployer Boolean @default(false)
+  positions       Json // Array of ExperiencePositionItemType
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
   @@index([userId])
 }
 

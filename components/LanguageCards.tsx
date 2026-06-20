@@ -260,7 +260,7 @@ export default function LanguageCards() {
  {/* Grid layout */}
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l-2 border-t-2 border-primary/20">
  {languages.map((lang) => {
-  const isAvailable = lang.name === "HTML & CSS";
+  const isAvailable = lang.name === "HTML & CSS" || lang.name === "JavaScript";
   return (
   <Link 
     href={isAvailable ? lang.path : "#"} 

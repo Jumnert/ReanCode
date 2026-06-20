@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { StudyContributions } from "@/components/study-contributions"
 import { auth } from "@/config/auth"
 import { EditProfileModal } from "@/components/profile/edit-profile-modal"
+import { EditExperienceModal } from "@/components/profile/edit-experience-modal"
+import { WorkExperience } from "@/components/work-experience"
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { 
@@ -16,10 +18,13 @@ import {
   Phone, 
   Link as LinkIcon, 
   Clock, 
-  Mail, 
-  UserCircle,
-  LogOut
+  Monitor,
+  Calendar,
+  LogOut,
+  Mail,
+  UserCircle
 } from "lucide-react"
+import { logoutAction } from "@/actions/auth"
 import { cn } from "@/lib/utils"
 
 import { AngkorWatAbstract } from "@/components/AngkorWatAbstract"
@@ -31,7 +36,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   
   const user = await prisma.user.findUnique({
     where: { username },
-    include: { studyActivity: true }
+    include: { studyActivity: true, workExperiences: { orderBy: { createdAt: 'desc' } } }
   })
 
   if (!user) {
@@ -89,7 +94,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 -mt-16 md:-mt-20 mb-6">
             <div className="flex flex-col gap-3">
               <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background bg-muted">
-                <AvatarImage src={user.avatarUrl || user.image || ""} alt={user.name || "User"} className="object-cover" />
+                <AvatarImage src={user.avatarUrl || user.image || ""} alt={user.name || "User"} className="object-cover" referrerPolicy="no-referrer" />
                 <AvatarFallback className="text-2xl"><UserCircle className="w-12 h-12 text-muted-foreground" /></AvatarFallback>
               </Avatar>
               
@@ -108,6 +113,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               {isOwner ? (
                 <>
                   <EditProfileModal user={user} />
+                  <EditExperienceModal />
                   <AlertDialog>
                     <AlertDialogTrigger 
                       render={<Button variant="outline" size="sm" className="gap-2 font-mono border-destructive/20 hover:bg-destructive/5 text-destructive hover:text-destructive" />}
@@ -123,7 +129,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <form action="/api/auth/signout" method="POST">
+                        <form action={logoutAction}>
                           <Button type="submit" variant="destructive" className="font-mono">
                             Yes, Logout
                           </Button>
@@ -234,6 +240,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             )}
           </div>
         </div>
+
+        {/* Work Experience Section */}
+        {user.workExperiences && user.workExperiences.length > 0 && (
+          <>
+            <div className="h-8 border-t border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(156, 146, 172, 0.1) 4px, rgba(156, 146, 172, 0.1) 5px)' }} />
+            <div className="border-t border-border/60">
+              <div className="px-4 md:px-6 py-4 border-b border-border/60">
+                <h2 className="text-3xl font-bold font-sans tracking-tight">Work Experience</h2>
+              </div>
+              <div className="p-4 md:p-6">
+                <WorkExperience experiences={user.workExperiences.map(e => ({
+                  id: e.id,
+                  companyName: e.companyName,
+                  companyLogo: e.companyLogo || undefined,
+                  companyWebsite: e.companyWebsite || undefined,
+                  isCurrentEmployer: e.isCurrentEmployer,
+                  positions: e.positions as any
+                }))} />
+              </div>
+            </div>
+          </>
+        )}
 
       </div>
     </div>

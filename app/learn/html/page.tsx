@@ -655,9 +655,51 @@ function Tag({ name }: { name: string }) {
 }
 
 import React, { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import confetti from "canvas-confetti"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
+const playSuccessChime = () => {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const gain = ctx.createGain();
+    gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1);
+
+    const playNote = (freq: number, delay: number) => {
+      const osc = ctx.createOscillator();
+      osc.connect(gain);
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + Math.max(delay + 0.3, 0.8));
+    };
+
+    playNote(523.25, 0);    // C5
+    playNote(659.25, 0.1);  // E5
+    playNote(783.99, 0.2);  // G5
+    playNote(1046.50, 0.3); // C6
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 /* ─────────────────────── Page ─────────────────────── */
 export default function LearnHtmlPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [showLoginAlert, setShowLoginAlert] = useState(false);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const totalChapters = 15;
 
@@ -683,7 +725,25 @@ export default function LearnHtmlPage() {
     window.dispatchEvent(new CustomEvent('chapterChangeActive', { detail: CHAPTER_IDS[currentChapterIndex] }));
   }, [currentChapterIndex]);
 
+  const advanceChapter = () => {
+    playSuccessChime();
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#cc785c', '#e09882', '#f5f5f7', '#ffd700']
+    });
+    if (currentChapterIndex < totalChapters - 1) {
+      setCurrentChapterIndex(prev => prev + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const handleNext = async () => {
+    if (!session) {
+      setShowLoginAlert(true);
+      return;
+    }
     if (currentChapterIndex < totalChapters - 1) {
       const activeId = CHAPTER_IDS[currentChapterIndex];
       // Mark as completed locally to update sidebar
@@ -699,8 +759,7 @@ export default function LearnHtmlPage() {
       // Record study contribution
       fetch('/api/study', { method: 'POST' }).catch(console.error);
 
-      setCurrentChapterIndex(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      advanceChapter();
     }
   };
 
@@ -1563,6 +1622,33 @@ ol { list-style-type: lower-alpha; } /* a, b, c */`}</CodeBlock>
 
       </div>
     </div>
+    
+    <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="font-kantumruy">ទាមទារការចូលគណនី</AlertDialogTitle>
+          <AlertDialogDescription>
+            អ្នកត្រូវចូលគណនីដើម្បីរក្សាទុកវឌ្ឍនភាពរបស់អ្នក និងបន្តទៅមេរៀនបន្ទាប់។
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="flex flex-col sm:flex-row gap-2">
+          <AlertDialogCancel>បោះបង់</AlertDialogCancel>
+          <AlertDialogAction 
+            variant="outline" 
+            className="border-border text-foreground hover:bg-muted font-kantumruy" 
+            onClick={() => {
+              setShowLoginAlert(false);
+              advanceChapter();
+            }}
+          >
+            រំលង &gt;
+          </AlertDialogAction>
+          <AlertDialogAction onClick={() => router.push('/login')}>
+            ចូលគណនី
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
   )
 }
