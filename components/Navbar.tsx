@@ -4,7 +4,8 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useSession, signOut } from "@/lib/auth-client"
-import { Code2, LogOut, Settings, User, UserPlus, LogIn, Menu, X, Music } from "lucide-react"
+import { SettingsModal, MUSIC_TRACKS, Track } from "@/components/SettingsModal"
+import { Code2, LogOut, Settings as SettingsIcon, User, UserPlus, LogIn, Menu, X, Music } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -41,26 +42,40 @@ export default function Navbar() {
  
  // Audio Logic
  const [isMusicPlaying, setIsMusicPlaying] = React.useState(false)
+ const [currentTrack, setCurrentTrack] = React.useState<Track>(MUSIC_TRACKS[0])
  const audioRef = React.useRef<HTMLAudioElement | null>(null)
 
  React.useEffect(() => {
    if (!audioRef.current) {
-     audioRef.current = new Audio("/fassounds-good-night-lofi-cozy-chill-music-160166.mp3")
+     audioRef.current = new Audio(currentTrack.file)
      audioRef.current.loop = true
      audioRef.current.volume = 0.5
+   } else {
+     audioRef.current.src = currentTrack.file
    }
    
-   // Attempt autoplay once on mount
-   const playPromise = audioRef.current.play()
-   if (playPromise !== undefined) {
-     playPromise
-       .then(() => {
-         setIsMusicPlaying(true)
-       })
-       .catch(e => {
-         console.warn("Autoplay blocked, waiting for manual interaction", e)
-         setIsMusicPlaying(false)
-       })
+   if (isMusicPlaying) {
+     audioRef.current.play().catch(e => {
+       console.warn("Autoplay blocked, waiting for manual interaction", e)
+       setIsMusicPlaying(false)
+     })
+   }
+ }, [currentTrack])
+
+ // Initial autoplay logic
+ React.useEffect(() => {
+   if (audioRef.current) {
+     const playPromise = audioRef.current.play()
+     if (playPromise !== undefined) {
+       playPromise
+         .then(() => {
+           setIsMusicPlaying(true)
+         })
+         .catch(e => {
+           console.warn("Autoplay blocked, waiting for manual interaction", e)
+           setIsMusicPlaying(false)
+         })
+     }
    }
  }, [])
 
@@ -91,15 +106,14 @@ export default function Navbar() {
 
  const handleLogout = async () => {
    await signOut()
-   window.location.href = "/"
-   window.location.reload()
+   router.push('/')
  }
 
  const navLinks = [
- { href: "/books", label: "សៀវភៅ" },
  { href: "/exercises", label: "លំហាត់" },
  { href: "/roadmaps", label: "ផែនទីរៀន" },
  { href: "/leaderboard", label: "ចំណាត់ថ្នាក់" },
+ { href: "/progress", label: "វឌ្ឍនភាព (Progress)" },
  ]
 
  return (
@@ -137,40 +151,6 @@ export default function Navbar() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3">
- <button
-    onClick={toggleMusicPlay}
-    className={cn(
-      "flex items-center justify-center w-9 h-9 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-      isMusicPlaying ? "text-primary hover:bg-primary/10" : "text-muted-foreground hover:text-primary hover:bg-primary/10"
-    )}
-    title={isMusicPlaying ? "Pause music" : "Play music"}
-  >
-    {isMusicPlaying ? (
-      <Music className="w-5 h-5" />
-    ) : (
-      <div className="relative">
-        <Music className="w-5 h-5 opacity-50" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[120%] h-0.5 bg-current rotate-45 opacity-50"></div>
-        </div>
-      </div>
-    )}
-  </button>
- {isAuthenticated && (
-    <TooltipProvider delayDuration={100}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Link href="/progress" className="h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-primary/10 hover:text-primary transition-colors text-muted-foreground relative focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-            <Activity className="h-5 w-5" />
-            <span className="sr-only">Learning Progress</span>
-          </Link>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-xs">
-          View Learning Progress
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  )}
  <AnimatedThemeToggler 
     variant="circle" 
     duration={700}
@@ -181,16 +161,30 @@ export default function Navbar() {
  {/* Desktop Authentication controls */}
  <div className="hidden md:flex items-center gap-3">
  {isAuthenticated && user ? (
-  <Link href="/profile">
-    <Avatar className="h-9 w-9 border border-border/80 transition-transform hover:scale-105 cursor-pointer shadow-sm">
-      {user.image && (
-        <AvatarImage src={user.image} alt={user.name ?? "User"} referrerPolicy="no-referrer" />
-      )}
-      <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
-        {user.name?.charAt(0).toUpperCase() ?? "U"}
-      </AvatarFallback>
-    </Avatar>
-  </Link>
+  <div className="flex items-center gap-2">
+    <Link href="/profile">
+      <Avatar className="h-9 w-9 border border-border/80 transition-transform hover:scale-105 cursor-pointer shadow-sm">
+        {user.image && (
+          <AvatarImage src={user.image} alt={user.name ?? "User"} referrerPolicy="no-referrer" />
+        )}
+        <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+          {user.name?.charAt(0).toUpperCase() ?? "U"}
+        </AvatarFallback>
+      </Avatar>
+    </Link>
+    
+    <SettingsModal 
+      isAuthenticated={isAuthenticated}
+      currentTrack={currentTrack}
+      setCurrentTrack={setCurrentTrack}
+      isMusicPlaying={isMusicPlaying}
+      toggleMusicPlay={toggleMusicPlay}
+    >
+      <button className="h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-primary/10 hover:text-primary transition-colors text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+        <SettingsIcon className="h-5 w-5" />
+      </button>
+    </SettingsModal>
+  </div>
  ) : (
  <>
  <Link href="/login">
@@ -263,8 +257,8 @@ export default function Navbar() {
  <User className="size-4 mr-2" />
  ប្រវត្តិរូប
  </Button>
- <Button variant="outline" size="sm" onClick={() => { setIsOpen(false); router.push("/settings") }} className="w-full justify-start">
- <Settings className="size-4 mr-2" />
+ <Button variant="outline" size="sm" onClick={() => { setIsOpen(false); router.push("/settings") }} className="w-full justify-start mt-2 hidden">
+ <SettingsIcon className="size-4 mr-2" />
  ការកំណត់
  </Button>
  <Button variant="destructive" size="sm" onClick={() => { setIsOpen(false); handleLogout() }} className="w-full justify-start mt-2">
