@@ -162,17 +162,6 @@ export default function Navbar() {
  <div className="hidden md:flex items-center gap-3">
  {isAuthenticated && user ? (
   <div className="flex items-center gap-2">
-    <Link href="/profile">
-      <Avatar className="h-9 w-9 border border-border/80 transition-transform hover:scale-105 cursor-pointer shadow-sm">
-        {user.image && (
-          <AvatarImage src={user.image} alt={user.name ?? "User"} referrerPolicy="no-referrer" />
-        )}
-        <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
-          {user.name?.charAt(0).toUpperCase() ?? "U"}
-        </AvatarFallback>
-      </Avatar>
-    </Link>
-    
     <SettingsModal 
       isAuthenticated={isAuthenticated}
       currentTrack={currentTrack}
@@ -184,6 +173,17 @@ export default function Navbar() {
         <SettingsIcon className="h-5 w-5" />
       </button>
     </SettingsModal>
+    
+    <Link href="/profile">
+      <Avatar className="h-9 w-9 border border-border/80 transition-transform hover:scale-105 cursor-pointer shadow-sm">
+        {user.image && (
+          <AvatarImage src={user.image} alt={user.name ?? "User"} referrerPolicy="no-referrer" />
+        )}
+        <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+          {user.name?.charAt(0).toUpperCase() ?? "U"}
+        </AvatarFallback>
+      </Avatar>
+    </Link>
   </div>
  ) : (
  <>
