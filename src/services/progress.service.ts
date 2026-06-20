@@ -47,7 +47,7 @@ export class ProgressService {
 
     // Try cache
     const cached = await redis.get(cacheKey);
-    if (cached) return JSON.parse(cached as string);
+    if (cached) return typeof cached === "string" ? JSON.parse(cached) : cached;
 
     // Query DB
     const [totalLessons, completedLessons, totalTimeSpent] = await Promise.all([
@@ -76,7 +76,7 @@ export class ProgressService {
     };
 
     // Cache for 5 minutes
-    await redis.setex(cacheKey, CacheTTL.SHORT, JSON.stringify(summary));
+    await redis.setex(cacheKey, CacheTTL.SHORT, summary);
 
     return summary;
   }
@@ -87,8 +87,8 @@ export class ProgressService {
     const today = new Date().toISOString().split("T")[0];
 
     const streakData = await redis.get(streakKey);
-    let streak = streakData
-      ? JSON.parse(streakData as string)
+    let streak: any = streakData
+      ? (typeof streakData === "string" ? JSON.parse(streakData) : streakData)
       : { count: 0, lastDate: null };
 
     const yesterday = new Date(Date.now() - 86400000)
@@ -105,7 +105,7 @@ export class ProgressService {
       streak.lastDate = today;
     }
 
-    await redis.set(streakKey, JSON.stringify(streak));
+    await redis.set(streakKey, streak);
 
     return streak;
   }
@@ -115,7 +115,7 @@ export class ProgressService {
     const streakKey = CacheKeys.userStreak(userId);
     const data = await redis.get(streakKey);
 
-    return data ? JSON.parse(data as string) : { count: 0, lastDate: null };
+    return data ? (typeof data === "string" ? JSON.parse(data) : data) : { count: 0, lastDate: null };
   }
 
   // Get course progress
