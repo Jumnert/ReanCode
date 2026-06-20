@@ -33,6 +33,8 @@ export const CacheKeys = {
   courseList: (category?: string) =>
     category ? `courses:${category}` : `courses:all`,
   course: (slug: string) => `course:${slug}`,
+  exerciseList: () => `exercises:all`,
+  exerciseCategoryList: (category: string) => `exercises:category:${category}`,
 };
 
 // Cache TTL (in seconds)

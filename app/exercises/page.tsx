@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 
+import { redis, CacheKeys, CacheTTL } from "@/config/redis";
+
 export const metadata: Metadata = {
   title: "លំហាត់អនុវត្តន៍ - រៀន២កូដ",
   description: "សាកល្បងសមត្ថភាពសរសេរកូដរបស់អ្នកតាមរយៈលំហាត់អនុវត្តន៍នានា",
@@ -13,25 +15,34 @@ export const metadata: Metadata = {
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function ExercisePage() {
-  // Fetch all published courses with their lessons and exercise counts
-  const courses = await prisma.course.findMany({
-    where: { published: true },
-    select: {
-      category: true,
-      lessons: {
-        select: {
-          _count: {
-            select: { exercises: true }
+  const cacheKey = CacheKeys.exerciseList();
+  let courses = await redis.get<any>(cacheKey);
+
+  if (!courses) {
+    // Fetch all published courses with their lessons and exercise counts
+    courses = await prisma.course.findMany({
+      where: { published: true },
+      select: {
+        category: true,
+        lessons: {
+          select: {
+            _count: {
+              select: { exercises: true }
+            }
           }
         }
       }
+    });
+    
+    if (courses) {
+      await redis.setex(cacheKey, CacheTTL.LONG, courses);
     }
-  });
+  }
 
   // Group by category (language) and sum exercises
   const languageStats: Record<string, { count: number, name: string, iconPath: string }> = {};
 
-  courses.forEach(course => {
+  courses.forEach((course: any) => {
     const cat = course.category.toLowerCase();
     
     // Determine language name and icon mapping
@@ -58,7 +69,7 @@ export default async function ExercisePage() {
       iconPath = "/images/vue.svg";
     }
 
-    const totalExercises = course.lessons.reduce((acc, lesson) => acc + lesson._count.exercises, 0);
+    const totalExercises = course.lessons.reduce((acc: number, lesson: any) => acc + lesson._count.exercises, 0);
 
     if (!languageStats[name]) {
       languageStats[name] = { count: 0, name, iconPath };

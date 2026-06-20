@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/config/auth";
 import { CheckCircle2 } from "lucide-react";
+import { redis, CacheKeys, CacheTTL } from "@/config/redis";
 
 export const revalidate = 3600;
 
@@ -58,30 +59,38 @@ export default async function CategoryExercisesPage(props: { params: Promise<{ c
     completedExerciseIds.add("mock-html-ex-1");
   }
 
-  const exercises = await prisma.exercise.findMany({
-    where: {
-      lesson: {
-        course: {
-          category: { in: dbCategories },
-          published: true
-        }
-      }
-    },
-    include: {
-      lesson: {
-        select: {
-          title: true,
+  const cacheKey = CacheKeys.exerciseCategoryList(rawCategory);
+  let exercises = await redis.get<any[]>(cacheKey);
+
+  if (!exercises) {
+    exercises = await prisma.exercise.findMany({
+      where: {
+        lesson: {
           course: {
-            select: { title: true }
+            category: { in: dbCategories },
+            published: true
           }
         }
-      }
-    },
-    orderBy: [
-      { lesson: { course: { order: 'asc' } } },
-      { lesson: { order: 'asc' } }
-    ]
-  });
+      },
+      include: {
+        lesson: {
+          select: {
+            title: true,
+            course: {
+              select: { title: true }
+            }
+          }
+        }
+      },
+      orderBy: [
+        { lesson: { course: { order: 'asc' } } },
+        { lesson: { order: 'asc' } }
+      ]
+    });
+    if (exercises) {
+      await redis.setex(cacheKey, CacheTTL.LONG, exercises);
+    }
+  }
 
   if (exercises.length === 0 && dbCategories.includes('html')) {
     exercises.push({
