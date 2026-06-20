@@ -266,7 +266,7 @@ export function ExerciseWorkspace({ exercise, rawCategory, isHtml }: { exercise:
             />
           ) : (
             <div className="flex-1 flex items-center justify-center text-white/50 font-mono text-sm">
-              // Compiler for {rawCategory} is currently unavailable
+              Compiler for {rawCategory} is currently unavailable
             </div>
           )}
         </div>

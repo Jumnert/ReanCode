@@ -86,7 +86,9 @@ export function RoadmapFlow({ roadmap }: { roadmap: Roadmap }) {
           <AnimatedBeam
             key={i}
             containerRef={containerRef}
+            // eslint-disable-next-line react-hooks/refs
             fromRef={{ current: nodeRefs.current[i] }}
+            // eslint-disable-next-line react-hooks/refs
             toRef={{ current: nodeRefs.current[i + 1] }}
             curvature={fromLeft ? 30 : -30}
             reverse={!fromLeft}

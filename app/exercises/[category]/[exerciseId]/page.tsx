@@ -4,7 +4,18 @@ import { notFound } from "next/navigation";
 import { HtmlCompiler } from "@/components/html-compiler";
 import { ExerciseWorkspace, ExerciseData } from "./exercise-workspace";
 
-export const revalidate = 0; // Dynamic route
+export const revalidate = 3600; // Cache for 1 hour, enabling ISR
+
+export async function generateStaticParams() {
+  const exercises = await prisma.exercise.findMany({
+    select: { id: true, lesson: { select: { course: { select: { category: true } } } } }
+  });
+
+  return exercises.map((ex) => ({
+    category: ex.lesson.course.category,
+    exerciseId: ex.id,
+  }));
+}
 
 export async function generateMetadata(props: { params: Promise<{ exerciseId: string }> }): Promise<Metadata> {
   const params = await props.params;

@@ -9,6 +9,17 @@ import { CheckCircle2 } from "lucide-react";
 
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+  const courses = await prisma.course.findMany({
+    select: { category: true }
+  });
+
+  const categories = Array.from(new Set(courses.map(c => c.category)));
+  return categories.map((category) => ({
+    category,
+  }));
+}
+
 export async function generateMetadata(props: { params: Promise<{ category: string }> }): Promise<Metadata> {
   const params = await props.params;
   const title = params.category.toUpperCase().replace('-', '/');
