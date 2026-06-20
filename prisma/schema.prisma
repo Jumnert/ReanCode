@@ -209,6 +209,7 @@ model Exercise {
   description String   @db.Text
   starterCode String   @db.Text
   solution    String   @db.Text
+  hint        String?  @db.Text
   testCases   Json // [{input, expected, description}]
   difficulty  String   @default("easy")
   points      Int      @default(10)

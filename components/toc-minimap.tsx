@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react"
 
-import { uMiniMapOpenSound } from "@/lib/soundcn/u-mini-map-open"
 import { cn } from "@/lib/utils"
+import { useWebHaptics } from "web-haptics/react"
 import { useSound } from "@/hooks/soundcn/use-sound"
+import { uMiniMapOpenSound } from "@/lib/soundcn/u-mini-map-open"
 import {
  HoverCard,
  HoverCardContent,
@@ -31,6 +32,7 @@ export function TOCMinimap({ items, className }: TOCMinimapProps) {
 
  const activeHeading = useActiveHeading(itemIds)
 
+ const { trigger } = useWebHaptics()
  const [play] = useSound(uMiniMapOpenSound, { volume: 0.3 })
 
  if (!items.length) {
@@ -41,7 +43,10 @@ export function TOCMinimap({ items, className }: TOCMinimapProps) {
  <div className={cn("ml-auto w-18", className)}>
  <HoverCard
  onOpenChange={(open) => {
- if (open) play()
+ if (open) {
+   play()
+   trigger('light')
+ }
  }}
  >
  <HoverCardTrigger render={<div className="flex max-h-[50dvh] flex-col gap-3 overflow-hidden py-3 pl-6 opacity-100 transition-opacity duration-200 data-popup-open:opacity-0" />}>{items.map((item) => (

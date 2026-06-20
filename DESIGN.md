@@ -592,9 +592,11 @@ The interface integrates `@ncdai/haptic` and `@ncdai/use-sound` to provide physi
 
 To separate distinct sections without relying on solid backgrounds or shadows, use diagonal striped pattern dividers (add this before a component). This maintains the wireframe, blueprint aesthetic while providing clear visual breaks.
 
+**CRITICAL LAYOUT RULE**: The decorative pattern divider (`repeating-linear-gradient`) should **always be edge-to-edge** (spanning the full width of the screen). It should be placed outside of any `max-w-` container wrappers so it spans 100% horizontally.
+
 Example code for a diagonal separator:
 ```html
-<div className="h-8 border-y border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }}></div>
+<div className="w-full h-8 border-y-2 border-[#cc785c]/20" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }}></div>
 ```
 
 ## Course Navigation Buttons
@@ -643,4 +645,34 @@ import { CopyButton } from "@/components/copy-button"
   variant="ghost"
   size="sm"
 />
+```
+
+## Ledger Grid Layout (Lists & Rankings)
+
+When displaying lists of data (like leaderboards, progress tracking, or history), use the "Ledger Grid" aesthetic instead of separated floating cards. This aligns with the architectural blueprint theme by turning lists into structured, continuous ledger tables.
+
+**Structure Rules:**
+- The list wrapper should have a maximum width and be horizontally centered with `max-w-3xl mx-auto`.
+- The list wrapper gets vertical container borders: `border-x-2 border-primary/20`.
+- Do NOT use `gap` between list items. Stack them sequentially as a continuous block.
+- Each list item is separated by a bottom border: `border-b-2 border-primary/20`. The very last item should have `border-b-0` to avoid double-bottom borders against the container.
+- Individual list items do NOT have box-shadows.
+
+**Example Structure:**
+```tsx
+<div className="max-w-3xl mx-auto border-x-2 border-primary/20">
+  <div className="flex flex-col">
+    {items.map((item, i) => (
+      <div 
+        key={i} 
+        className={cn(
+          "px-6 py-5 border-b-2 border-primary/20 transition-colors hover:bg-muted/30",
+          i === items.length - 1 ? "border-b-0" : ""
+        )}
+      >
+        {/* Item Content */}
+      </div>
+    ))}
+  </div>
+</div>
 ```

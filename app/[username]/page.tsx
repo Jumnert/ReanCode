@@ -1,4 +1,5 @@
 import React from "react"
+import Image from "next/image"
 import { prisma } from "@/config/prisma"
 import { notFound } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -89,10 +90,37 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       }
     })
   }
-  const courseProgress = Array.from(progressMap.entries()).map(([category, count]) => ({
-    category,
-    count
-  }))
+
+  const categories = Array.from(progressMap.keys())
+  const coursesWithLessons = await prisma.course.findMany({
+    where: { category: { in: categories } },
+    select: { category: true, _count: { select: { lessons: { where: { published: true } } } } }
+  })
+  
+  const totalLessonsMap = new Map<string, number>()
+  coursesWithLessons.forEach(c => {
+    totalLessonsMap.set(c.category, (totalLessonsMap.get(c.category) || 0) + c._count.lessons)
+  })
+
+  const courseProgress = Array.from(progressMap.entries()).map(([category, count]) => {
+    const total = totalLessonsMap.get(category) || 1
+    let iconPath = ""
+    const cat = category.toLowerCase()
+    if (cat.includes("html") || cat.includes("css")) iconPath = "/images/html.svg"
+    else if (cat.includes("javascript") || cat.includes("js")) iconPath = "/images/javascript.svg"
+    else if (cat.includes("python")) iconPath = "/images/python.svg"
+    else if (cat.includes("react")) iconPath = "/images/react.svg"
+    else if (cat.includes("typescript") || cat.includes("ts")) iconPath = "/images/typescript.svg"
+    else if (cat.includes("vue")) iconPath = "/images/vue.svg"
+
+    return {
+      category,
+      count,
+      total,
+      percentage: Math.min(100, Math.round((count / total) * 100)),
+      iconPath
+    }
+  })
 
   // Format activities for the graph
   const today = new Date()
@@ -154,12 +182,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   @{user.username}
                 </div>
                 {courseProgress.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-4">
+                  <div className="flex flex-wrap gap-4 mt-6">
                     {courseProgress.map(p => (
-                      <div key={p.category} className="px-3 py-1 bg-[#efe9de] text-[#141413] rounded-full text-[13px] font-medium flex items-center gap-1.5 border border-[#e6dfd8]">
-                        <Code2 className="w-3.5 h-3.5 text-[#cc785c]" />
-                        <span className="capitalize">{p.category}</span>
-                        <span className="opacity-60 text-[11px] ml-1">({p.count} មេរៀន)</span>
+                      <div key={p.category} className="group flex items-center gap-3 bg-background border-2 border-primary/20 p-2 pr-4 rounded-none shadow-[2px_2px_0_hsl(var(--primary))] min-w-[200px]">
+                        <div className="w-10 h-10 border-2 border-primary/20 flex flex-shrink-0 items-center justify-center bg-background p-1.5">
+                          {p.iconPath ? (
+                            <Image src={p.iconPath} alt={p.category} width={24} height={24} />
+                          ) : (
+                            <Code2 className="w-5 h-5 text-primary" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-kantumruy font-bold capitalize text-sm truncate">{p.category}</span>
+                            <span className="text-xs font-mono font-bold text-primary">{p.percentage}%</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-primary/10 border border-primary/20">
+                            <div className="h-full bg-primary" style={{ width: `${p.percentage}%` }} />
+                          </div>
+                          <div className="text-[10px] text-muted-foreground font-mono mt-1 opacity-80 uppercase tracking-wide">
+                            {p.count} / {p.total} Lessons
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -263,7 +307,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           
           <div className="flex flex-col">
             {techStack.length > 0 ? (
-              techStack.map((section: any, idx: number) => (
+              techStack.map((section: { id?: string, category: string, items: string[] }, idx: number) => (
                 <div 
                   key={section.id} 
                   className={cn(

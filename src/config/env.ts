@@ -52,7 +52,7 @@ export type Env = z.infer<typeof envSchema>;
 function validateEnv(): Env {
   // Skip validation during Next.js build phase
   if (process.env.SKIP_ENV_VALIDATION === "1") {
-    return process.env as unknown as Env;
+    return process.env as any as Env;
   }
   try {
     return envSchema.parse(process.env);

@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.json(experiences);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to fetch work experience:", error);
     return NextResponse.json({ error: "Failed to fetch work experience" }, { status: 500 });
   }
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     if (user?.username) await redis.del(CacheKeys.userProfile(user.username))
 
     return NextResponse.json(newExperience);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to add work experience:", error);
     return NextResponse.json({ error: "Failed to add work experience" }, { status: 500 });
   }
@@ -97,7 +97,7 @@ export async function PUT(req: NextRequest) {
     if (user?.username) await redis.del(CacheKeys.userProfile(user.username))
 
     return NextResponse.json(updatedExperience);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to update work experience:", error);
     return NextResponse.json({ error: "Failed to update work experience" }, { status: 500 });
   }
@@ -131,7 +131,7 @@ export async function DELETE(req: NextRequest) {
     if (user?.username) await redis.del(CacheKeys.userProfile(user.username))
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to delete work experience:", error);
     return NextResponse.json({ error: "Failed to delete work experience" }, { status: 500 });
   }

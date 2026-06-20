@@ -12,6 +12,7 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import { useTheme } from "next-themes"
 import { Activity } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { BackgroundMusic } from "@/components/BackgroundMusic"
 import {
  DropdownMenu,
  DropdownMenuContent,
@@ -89,6 +90,7 @@ export default function Navbar() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3">
+ <BackgroundMusic />
  {isAuthenticated && (
     <TooltipProvider delayDuration={100}>
       <Tooltip>

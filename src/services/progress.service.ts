@@ -87,7 +87,7 @@ export class ProgressService {
     const today = new Date().toISOString().split("T")[0];
 
     const streakData = await redis.get(streakKey);
-    let streak: any = streakData
+    const streak: any = streakData
       ? (typeof streakData === "string" ? JSON.parse(streakData) : streakData)
       : { count: 0, lastDate: null };
 

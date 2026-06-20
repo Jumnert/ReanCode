@@ -57,9 +57,11 @@ interface HtmlCompilerProps {
  className?: string
  /** compact = embedded inside a lesson section (shorter, no fullscreen) */
  compact?: boolean
+ fullHeight?: boolean
+ onChange?: (code: string) => void
 }
 
-export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = false }: HtmlCompilerProps) {
+export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = false, fullHeight = false, onChange }: HtmlCompilerProps) {
  const { resolvedTheme } = useTheme()
  const isDark = resolvedTheme === "dark"
 
@@ -67,6 +69,11 @@ export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = 
  const [output, setOutput] = React.useState(defaultCode)
  const [copied, setCopied] = React.useState(false)
  const [expanded, setExpanded] = React.useState(false)
+
+ const handleCodeChange = (newCode: string) => {
+   setCode(newCode)
+   onChange?.(newCode)
+ }
 
  const runCode = React.useCallback(() => {
  setOutput(code)
@@ -86,6 +93,7 @@ export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = 
  setTimeout(() => setCopied(false), 2000)
  }
 
+ // eslint-disable-next-line react-hooks/set-state-in-effect
  React.useEffect(() => { setOutput(defaultCode) }, [defaultCode])
 
  /* ── Theme-aware tokens ── */
@@ -162,7 +170,7 @@ export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = 
  className={cn("h-6 w-6 p-0", toolbarBtn)}>
  <RotateCcw className="h-3 w-3" />
  </Button>
- {!compact && (
+ {!compact && !fullHeight && (
  <Button variant="ghost" size="sm" onClick={() => setExpanded(!expanded)}
  className={cn("h-6 w-6 p-0", toolbarBtn)}>
  {expanded ? <Minimize2 className="h-3 w-3" /> : <Maximize2 className="h-3 w-3" />}
@@ -180,7 +188,7 @@ export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = 
  <div className={cn(
         "grid grid-cols-1 md:grid-cols-2",
         "grid-rows-2 md:grid-rows-1",
-        compact ? "h-[600px] md:h-[400px]" : expanded ? "h-[calc(100vh-100px)]" : "h-[800px] md:h-[580px]"
+        fullHeight ? "h-full flex-1" : compact ? "h-[600px] md:h-[400px]" : expanded ? "h-[calc(100vh-100px)]" : "h-[800px] md:h-[580px]"
       )}>
  {/* Monaco Editor */}
  <div className={cn("h-full border-b md:border-b-0 md:border-r overflow-hidden transition-colors", editorBg)}>
@@ -188,7 +196,7 @@ export function HtmlCompiler({ defaultCode = DEFAULT_CODE, className, compact = 
  height="100%"
  language="html"
  value={code}
- onChange={(val) => setCode(val ?? "")}
+ onChange={(val) => handleCodeChange(val ?? "")}
  theme={monacoTheme}
  options={{
  fontSize: compact ? 12 : 13,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Kantumruy_Pro, Inter, Cormorant_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import NavbarWrapper from "@/components/NavbarWrapper";
+import { UsernameSetupCheck } from "@/components/username-setup-check";
 
 import { Providers } from "./providers";
 import { ConsentManager } from "@/components/consent-manager";
@@ -84,6 +85,7 @@ export default function RootLayout({
  >
  <Providers>
    <ConsentManager>
+     <UsernameSetupCheck />
      <NavbarWrapper />
      {children}
    </ConsentManager>

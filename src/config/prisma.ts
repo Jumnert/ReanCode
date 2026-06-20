@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaNeonHttp } from "@prisma/adapter-neon";
-import { neon } from "@neondatabase/serverless";
 
 // Read DATABASE_URL from process.env or directly from .env.local
 function getDatabaseUrl(): string {
@@ -27,14 +26,14 @@ function getDatabaseUrl(): string {
   throw new Error("DATABASE_URL is not set. Check your .env.local file.");
 }
 
-const globalForPrisma = globalThis as unknown as {
+const globalForPrisma = globalThis as any as {
   prisma: PrismaClient | undefined;
 };
 
 function createPrismaClient(): PrismaClient {
   const connectionString = getDatabaseUrl();
   // Use HTTP driver — works in all environments without WebSocket setup
-  // @ts-ignore - PrismaNeonHttp types might be outdated
+  // @ts-expect-error - PrismaNeonHttp types might be outdated
   const adapter = new PrismaNeonHttp(connectionString);
 
   return new PrismaClient({

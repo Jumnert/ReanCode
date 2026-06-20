@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json(activity)
-  } catch (error: any) {
+  } catch (error) {
     console.error("Study tracking error:", error)
     return NextResponse.json({ error: "Failed to track study activity" }, { status: 500 })
   }
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
     })
 
     return NextResponse.json(formattedActivities)
-  } catch (error: any) {
+  } catch (error) {
     console.error("Failed to fetch study activity:", error)
     return NextResponse.json({ error: "Failed to fetch study activity" }, { status: 500 })
   }

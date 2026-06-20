@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json(user)
-  } catch (error: any) {
+  } catch (error) {
     console.error("Profile fetch error:", error)
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 })
   }

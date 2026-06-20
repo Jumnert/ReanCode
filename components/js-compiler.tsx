@@ -51,9 +51,11 @@ interface JsCompilerProps {
   className?: string
   /** compact = embedded inside a lesson section (shorter, no fullscreen) */
   compact?: boolean
+  fullHeight?: boolean
+  onChange?: (code: string) => void
 }
 
-export function JsCompiler({ defaultCode = DEFAULT_CODE, className, compact = false }: JsCompilerProps) {
+export function JsCompiler({ defaultCode = DEFAULT_CODE, className, compact = false, fullHeight = false, onChange }: JsCompilerProps) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
 
@@ -195,7 +197,7 @@ export function JsCompiler({ defaultCode = DEFAULT_CODE, className, compact = fa
         className={cn(
           "grid grid-cols-1 md:grid-cols-2",
           "grid-rows-2 md:grid-rows-1",
-          compact ? "h-[600px] md:h-[400px]" : expanded ? "h-[calc(100vh-100px)]" : "h-[800px] md:h-[580px]"
+          compact ? "h-[600px] md:h-[400px]" : expanded ? "h-[calc(100vh-100px)]" : fullHeight ? "h-full flex-1" : "h-[800px] md:h-[580px]"
         )}
       >
         {/* Monaco Editor */}
@@ -204,7 +206,11 @@ export function JsCompiler({ defaultCode = DEFAULT_CODE, className, compact = fa
             height="100%"
             language="javascript"
             value={code}
-            onChange={(val) => setCode(val ?? "")}
+            onChange={(val) => {
+              const newCode = val ?? "";
+              setCode(newCode);
+              onChange?.(newCode);
+            }}
             theme={monacoTheme}
             options={{
               fontSize: compact ? 12 : 13,

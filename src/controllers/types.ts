@@ -51,5 +51,5 @@ export type SortOptions = {
 export type QueryOptions = {
   pagination?: PaginationOptions;
   sort?: SortOptions;
-  filter?: Record<string, any>;
+  filter?: Record<string, unknown>;
 };
