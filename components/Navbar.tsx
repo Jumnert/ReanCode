@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useSession, signOut } from "@/lib/auth-client"
-import { Code2, LogOut, Settings, User, UserPlus, LogIn, Menu, X } from "lucide-react"
+import { Code2, LogOut, Settings, User, UserPlus, LogIn, Menu, X, Music } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
@@ -12,7 +12,6 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import { useTheme } from "next-themes"
 import { Activity } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { BackgroundMusic } from "@/components/BackgroundMusic"
 import {
  DropdownMenu,
  DropdownMenuContent,
@@ -34,13 +33,61 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { cn } from "@/lib/utils"
 
 export default function Navbar() {
- const { data: session } = useSession()
- const { theme, setTheme, resolvedTheme } = useTheme()
- const router = useRouter()
  const pathname = usePathname()
+ const router = useRouter()
+ const { data: session } = useSession()
+ const { resolvedTheme, setTheme } = useTheme()
+ const [isOpen, setIsOpen] = React.useState(false)
+ 
+ // Audio Logic
+ const [isMusicPlaying, setIsMusicPlaying] = React.useState(false)
+ const audioRef = React.useRef<HTMLAudioElement | null>(null)
+
+ React.useEffect(() => {
+   if (!audioRef.current) {
+     audioRef.current = new Audio("/fassounds-good-night-lofi-cozy-chill-music-160166.mp3")
+     audioRef.current.loop = true
+     audioRef.current.volume = 0.5
+   }
+   
+   // Attempt autoplay once on mount
+   const playPromise = audioRef.current.play()
+   if (playPromise !== undefined) {
+     playPromise
+       .then(() => {
+         setIsMusicPlaying(true)
+       })
+       .catch(e => {
+         console.warn("Autoplay blocked, waiting for manual interaction", e)
+         setIsMusicPlaying(false)
+       })
+   }
+ }, [])
+
+ React.useEffect(() => {
+   return () => {
+     if (audioRef.current) {
+       audioRef.current.pause()
+     }
+   }
+ }, [])
+
+ const toggleMusicPlay = (e?: React.MouseEvent) => {
+   e?.preventDefault()
+   e?.stopPropagation()
+   if (!audioRef.current) return
+   
+   if (audioRef.current.paused) {
+     audioRef.current.play().catch(e => console.error("Audio playback failed:", e))
+     setIsMusicPlaying(true)
+   } else {
+     audioRef.current.pause()
+     setIsMusicPlaying(false)
+   }
+ }
+
  const isAuthenticated = !!session?.user
  const user = session?.user
- const [isOpen, setIsOpen] = React.useState(false)
 
  const handleLogout = async () => {
    await signOut()
@@ -90,7 +137,25 @@ export default function Navbar() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3">
- <BackgroundMusic />
+ <button
+    onClick={toggleMusicPlay}
+    className={cn(
+      "flex items-center justify-center w-9 h-9 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+      isMusicPlaying ? "text-primary hover:bg-primary/10" : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+    )}
+    title={isMusicPlaying ? "Pause music" : "Play music"}
+  >
+    {isMusicPlaying ? (
+      <Music className="w-5 h-5" />
+    ) : (
+      <div className="relative">
+        <Music className="w-5 h-5 opacity-50" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-[120%] h-0.5 bg-current rotate-45 opacity-50"></div>
+        </div>
+      </div>
+    )}
+  </button>
  {isAuthenticated && (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
