@@ -34,15 +34,19 @@ export function BackgroundMusic() {
       audioRef.current.src = currentTrack.file
     }
     
+    let playOnInteract: (() => void) | null = null;
+    
     if (isPlaying) {
       audioRef.current.play().catch(e => {
         console.warn("Autoplay blocked, waiting for interaction", e)
-        const playOnInteract = () => {
+        playOnInteract = () => {
           if (audioRef.current && isPlaying) {
             audioRef.current.play().catch(() => {})
           }
-          document.removeEventListener('click', playOnInteract)
-          document.removeEventListener('keydown', playOnInteract)
+          if (playOnInteract) {
+            document.removeEventListener('click', playOnInteract)
+            document.removeEventListener('keydown', playOnInteract)
+          }
         }
         document.addEventListener('click', playOnInteract)
         document.addEventListener('keydown', playOnInteract)
@@ -51,7 +55,12 @@ export function BackgroundMusic() {
       audioRef.current.pause()
     }
     
-    return () => {}
+    return () => {
+      if (playOnInteract) {
+        document.removeEventListener('click', playOnInteract)
+        document.removeEventListener('keydown', playOnInteract)
+      }
+    }
   }, [currentTrack, isPlaying])
 
   // Cleanup on unmount
@@ -59,7 +68,7 @@ export function BackgroundMusic() {
     return () => {
       if (audioRef.current) {
         audioRef.current.pause()
-        audioRef.current = null
+        // Do not set to null, otherwise StrictMode creates a duplicate overlapping audio object
       }
     }
   }, [])

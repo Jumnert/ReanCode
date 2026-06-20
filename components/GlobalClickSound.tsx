@@ -4,9 +4,14 @@ import { useEffect, useRef } from "react"
 
 export function GlobalClickSound() {
   const audioCtxRef = useRef<AudioContext | null>(null)
+  const lastPlayRef = useRef<number>(0)
 
   useEffect(() => {
     const playClickSound = () => {
+      const now = performance.now()
+      if (now - lastPlayRef.current < 50) return
+      lastPlayRef.current = now
+
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
       }
