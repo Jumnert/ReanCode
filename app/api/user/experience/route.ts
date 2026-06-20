@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/config/auth";
 import { prisma } from "@/config/prisma";
+import { redis, CacheKeys } from "@/config/redis";
 
 export async function GET(req: NextRequest) {
   try {
@@ -48,6 +49,10 @@ export async function POST(req: NextRequest) {
       }
     });
 
+    // Invalidate profile cache
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { username: true } })
+    if (user?.username) await redis.del(CacheKeys.userProfile(user.username))
+
     return NextResponse.json(newExperience);
   } catch (error: any) {
     console.error("Failed to add work experience:", error);
@@ -87,6 +92,10 @@ export async function PUT(req: NextRequest) {
       }
     });
 
+    // Invalidate profile cache
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { username: true } })
+    if (user?.username) await redis.del(CacheKeys.userProfile(user.username))
+
     return NextResponse.json(updatedExperience);
   } catch (error: any) {
     console.error("Failed to update work experience:", error);
@@ -116,6 +125,10 @@ export async function DELETE(req: NextRequest) {
     }
 
     await prisma.workExperience.delete({ where: { id } });
+
+    // Invalidate profile cache
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { username: true } })
+    if (user?.username) await redis.del(CacheKeys.userProfile(user.username))
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

@@ -26,24 +26,56 @@ import {
 } from "lucide-react"
 import { logoutAction } from "@/actions/auth"
 import { cn } from "@/lib/utils"
+import { redis, CacheKeys, CacheTTL } from "@/config/redis"
 
 import { AngkorWatAbstract } from "@/components/AngkorWatAbstract"
+
+type ProfileUser = NonNullable<Awaited<ReturnType<typeof fetchUserFromDb>>>
+
+async function fetchUserFromDb(username: string) {
+  return prisma.user.findUnique({
+    where: { username },
+    include: {
+      studyActivity: true,
+      workExperiences: { orderBy: { createdAt: "desc" } },
+    },
+  })
+}
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params
 
   const session = await auth()
-  
-  const user = await prisma.user.findUnique({
-    where: { username },
-    include: { studyActivity: true, workExperiences: { orderBy: { createdAt: 'desc' } } }
-  })
+  const isOwner = session?.user?.email !== undefined
+
+  let user: ProfileUser | null = null
+
+  // Skip cache for the owner so their edits are always fresh
+  const sessionEmail = session?.user?.email
+  const cacheKey = CacheKeys.userProfile(username)
+
+  if (!sessionEmail) {
+    // Guest — try cache first
+    const cached = await redis.get<ProfileUser>(cacheKey)
+    if (cached) {
+      user = cached
+    }
+  }
+
+  if (!user) {
+    user = await fetchUserFromDb(username)
+    // Only cache public (non-owner) views
+    if (user && user.email !== sessionEmail) {
+      await redis.set(cacheKey, user, { ex: CacheTTL.SHORT })
+    }
+  }
 
   if (!user) {
     notFound()
   }
 
-  const isOwner = session?.user?.email === user.email
+  const isOwnerView = sessionEmail === user.email
+
 
   const techStack = user.techStack ? (user.techStack as any) : []
   

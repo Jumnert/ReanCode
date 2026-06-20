@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/config/prisma"
 import { auth } from "@/config/auth"
+import { redis, CacheKeys } from "@/config/redis"
 
 export async function PUT(req: NextRequest) {
   try {
@@ -48,6 +49,11 @@ export async function PUT(req: NextRequest) {
         techStack: techStack ? techStack : undefined,
       },
     })
+
+    // Invalidate profile cache so other viewers see fresh data
+    if (updatedUser.username) {
+      await redis.del(CacheKeys.userProfile(updatedUser.username))
+    }
 
     return NextResponse.json(updatedUser)
   } catch (error: any) {

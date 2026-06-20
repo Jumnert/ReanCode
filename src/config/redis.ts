@@ -12,6 +12,7 @@ export const CacheKeys = {
   // User
   userProgress: (userId: string) => `user:${userId}:progress`,
   userStreak: (userId: string) => `user:${userId}:streak`,
+  userProfile: (username: string) => `user:profile:${username}`,
 
   // Lessons
   lesson: (slug: string) => `lesson:${slug}`,
