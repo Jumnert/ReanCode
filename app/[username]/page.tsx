@@ -38,6 +38,10 @@ async function fetchUserFromDb(username: string) {
     include: {
       studyActivity: true,
       workExperiences: { orderBy: { createdAt: "desc" } },
+      progress: {
+        where: { completed: true },
+        include: { course: true }
+      }
     },
   })
 }
@@ -76,6 +80,20 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const isOwner = sessionEmail === user.email
   const techStack = user.techStack ? (user.techStack as any) : []
   
+  // Aggregate language progress from completed lessons
+  const progressMap = new Map<string, number>()
+  if (user.progress) {
+    user.progress.forEach(p => {
+      if (p.course?.category) {
+        progressMap.set(p.course.category, (progressMap.get(p.course.category) || 0) + 1)
+      }
+    })
+  }
+  const courseProgress = Array.from(progressMap.entries()).map(([category, count]) => ({
+    category,
+    count
+  }))
+
   // Format activities for the graph
   const today = new Date()
   const oneYearAgo = new Date()
@@ -135,6 +153,17 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <div className="text-muted-foreground font-mono mt-1">
                   @{user.username}
                 </div>
+                {courseProgress.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {courseProgress.map(p => (
+                      <div key={p.category} className="px-3 py-1 bg-[#efe9de] text-[#141413] rounded-full text-[13px] font-medium flex items-center gap-1.5 border border-[#e6dfd8]">
+                        <Code2 className="w-3.5 h-3.5 text-[#cc785c]" />
+                        <span className="capitalize">{p.category}</span>
+                        <span className="opacity-60 text-[11px] ml-1">({p.count} មេរៀន)</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
