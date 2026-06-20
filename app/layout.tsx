@@ -3,6 +3,7 @@ import { Kantumruy_Pro, Inter, Cormorant_Garamond, JetBrains_Mono } from "next/f
 import "./globals.css";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import { UsernameSetupCheck } from "@/components/username-setup-check";
+import { GlobalClickSound } from "@/components/GlobalClickSound";
 
 import { Providers } from "./providers";
 import { ConsentManager } from "@/components/consent-manager";
@@ -87,6 +88,7 @@ export default function RootLayout({
    <ConsentManager>
      <UsernameSetupCheck />
      <NavbarWrapper />
+     <GlobalClickSound />
      {children}
    </ConsentManager>
  </Providers>

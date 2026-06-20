@@ -21,7 +21,7 @@ const TRACKS = [
 ]
 
 export function BackgroundMusic() {
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
   const [currentTrack, setCurrentTrack] = useState(TRACKS.find(t => t.id === "mood") || TRACKS[0])
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -29,19 +29,30 @@ export function BackgroundMusic() {
     if (!audioRef.current) {
       audioRef.current = new Audio(currentTrack.file)
       audioRef.current.loop = true
-      audioRef.current.volume = 0.1
+      audioRef.current.volume = 0.5
     } else {
-      const wasPlaying = !audioRef.current.paused
       audioRef.current.src = currentTrack.file
-      if (wasPlaying || isPlaying) {
-        audioRef.current.play().catch(e => console.error("Audio playback failed:", e))
-      }
     }
     
-    return () => {
-      // Don't destroy on every re-render/track change, only on unmount
+    if (isPlaying) {
+      audioRef.current.play().catch(e => {
+        console.warn("Autoplay blocked, waiting for interaction", e)
+        const playOnInteract = () => {
+          if (audioRef.current && isPlaying) {
+            audioRef.current.play().catch(() => {})
+          }
+          document.removeEventListener('click', playOnInteract)
+          document.removeEventListener('keydown', playOnInteract)
+        }
+        document.addEventListener('click', playOnInteract)
+        document.addEventListener('keydown', playOnInteract)
+      })
+    } else {
+      audioRef.current.pause()
     }
-  }, [currentTrack]) // re-run when track changes
+    
+    return () => {}
+  }, [currentTrack, isPlaying])
 
   // Cleanup on unmount
   useEffect(() => {
