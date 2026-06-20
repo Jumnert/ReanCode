@@ -2,12 +2,12 @@
 
 import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { Volume2, VolumeX } from "lucide-react"
+import { Music, Music4 } from "lucide-react"
 
 const TRACK_FILE = "/fassounds-good-night-lofi-cozy-chill-music-160166.mp3"
 
 export function BackgroundMusic() {
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
@@ -17,41 +17,28 @@ export function BackgroundMusic() {
       audioRef.current.volume = 0.5
     }
     
-    let playOnInteract: (() => void) | null = null;
-    
-    if (isPlaying) {
-      audioRef.current.play().catch(e => {
-        console.warn("Autoplay blocked, waiting for interaction", e)
-        playOnInteract = () => {
-          if (audioRef.current && isPlaying) {
-            audioRef.current.play().catch(() => {})
-          }
-          if (playOnInteract) {
-            document.removeEventListener('click', playOnInteract)
-            document.removeEventListener('keydown', playOnInteract)
-          }
-        }
-        document.addEventListener('click', playOnInteract)
-        document.addEventListener('keydown', playOnInteract)
-      })
-    } else {
-      audioRef.current.pause()
+    // Attempt autoplay once on mount
+    const playPromise = audioRef.current.play()
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true)
+        })
+        .catch(e => {
+          console.warn("Autoplay blocked, waiting for manual interaction", e)
+          setIsPlaying(false)
+        })
     }
     
-    return () => {
-      if (playOnInteract) {
-        document.removeEventListener('click', playOnInteract)
-        document.removeEventListener('keydown', playOnInteract)
-      }
-    }
-  }, [isPlaying])
+    // We intentionally do not use a global click listener anymore since the user
+    // wants to toggle it manually via the navbar icon.
+  }, [])
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (audioRef.current) {
         audioRef.current.pause()
-        // Do not set to null, otherwise StrictMode creates a duplicate overlapping audio object
       }
     }
   }, [])
@@ -61,12 +48,13 @@ export function BackgroundMusic() {
     e?.stopPropagation()
     if (!audioRef.current) return
     
-    if (isPlaying) {
-      audioRef.current.pause()
-    } else {
+    if (audioRef.current.paused) {
       audioRef.current.play().catch(e => console.error("Audio playback failed:", e))
+      setIsPlaying(true)
+    } else {
+      audioRef.current.pause()
+      setIsPlaying(false)
     }
-    setIsPlaying(!isPlaying)
   }
 
   return (
@@ -79,9 +67,14 @@ export function BackgroundMusic() {
       title={isPlaying ? "Pause music" : "Play music"}
     >
       {isPlaying ? (
-        <Volume2 className="w-5 h-5" />
+        <Music className="w-5 h-5" />
       ) : (
-        <VolumeX className="w-5 h-5 opacity-50" />
+        <div className="relative">
+          <Music className="w-5 h-5 opacity-50" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-[120%] h-0.5 bg-current rotate-45 opacity-50"></div>
+          </div>
+        </div>
       )}
     </button>
   )
