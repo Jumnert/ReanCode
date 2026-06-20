@@ -79,7 +79,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   }
 
   const isOwner = sessionEmail === user.email
-  const techStack = user.techStack ? (user.techStack as string[]) : []
+  const techStack = user.techStack ? (user.techStack as { id?: string; category: string; items: string[] }[]) : []
   
   // Aggregate language progress from completed lessons
   const progressMap = new Map<string, number>()
@@ -335,7 +335,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   companyLogo: e.companyLogo || undefined,
                   companyWebsite: e.companyWebsite || undefined,
                   isCurrentEmployer: e.isCurrentEmployer,
-                  positions: e.positions as { role: string; startDate: string; endDate?: string; description?: string }[]
+                  positions: e.positions as { id: string; title: string; employmentPeriod: { start: string; end?: string }; description?: string }[]
                 }))} />
               </div>
             </div>
