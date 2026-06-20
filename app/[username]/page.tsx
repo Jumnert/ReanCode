@@ -46,12 +46,11 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const { username } = await params
 
   const session = await auth()
-  const isOwner = session?.user?.email !== undefined
+  const sessionEmail = session?.user?.email
 
   let user: ProfileUser | null = null
 
   // Skip cache for the owner so their edits are always fresh
-  const sessionEmail = session?.user?.email
   const cacheKey = CacheKeys.userProfile(username)
 
   if (!sessionEmail) {
@@ -74,9 +73,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     notFound()
   }
 
-  const isOwnerView = sessionEmail === user.email
-
-
+  const isOwner = sessionEmail === user.email
   const techStack = user.techStack ? (user.techStack as any) : []
   
   // Format activities for the graph
