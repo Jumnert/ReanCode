@@ -9,6 +9,7 @@ import { Code2, LogOut, Settings, User, UserPlus, LogIn, Menu, X } from "lucide-
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
+import { NavProgressPopover } from "@/components/nav-progress-popover"
 import { useTheme } from "next-themes"
 import {
  DropdownMenu,
@@ -87,6 +88,7 @@ export default function Navbar() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3">
+ {isAuthenticated && <NavProgressPopover />}
  <AnimatedThemeToggler 
     variant="circle" 
     duration={700}
