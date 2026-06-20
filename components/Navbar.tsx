@@ -9,8 +9,9 @@ import { Code2, LogOut, Settings, User, UserPlus, LogIn, Menu, X } from "lucide-
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
-import { NavProgressPopover } from "@/components/nav-progress-popover"
 import { useTheme } from "next-themes"
+import { Activity } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
  DropdownMenu,
  DropdownMenuContent,
@@ -88,7 +89,21 @@ export default function Navbar() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3">
- {isAuthenticated && <NavProgressPopover />}
+ {isAuthenticated && (
+    <TooltipProvider delayDuration={100}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link href="/progress" className="h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-primary/10 hover:text-primary transition-colors text-muted-foreground relative focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
+            <Activity className="h-5 w-5" />
+            <span className="sr-only">Learning Progress</span>
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="text-xs">
+          View Learning Progress
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )}
  <AnimatedThemeToggler 
     variant="circle" 
     duration={700}
