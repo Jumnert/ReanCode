@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { Volume2, VolumeX } from "lucide-react"
 
-const TRACK_FILE = "/chill.mp3"
+const TRACK_FILE = "/fassounds-good-night-lofi-cozy-chill-music-160166.mp3"
 
 export function BackgroundMusic() {
   const [isPlaying, setIsPlaying] = useState(true)
