@@ -1,0 +1,44 @@
+# រៀន២កូដ (Rean2Code)
+
+> វេទិកាសិក្សាសរសេរកូដជាភាសាខ្មែរ — Learn to code in Khmer. Free interactive lessons, exercises, books, and a leaderboard for Cambodian developers.
+
+## About
+
+រៀន២កូដ (Rean2Code) is a Cambodian coding education platform that teaches programming in the Khmer language. It provides free, structured learning paths for HTML, CSS, JavaScript, Python, and more — making software development accessible to Khmer speakers worldwide.
+
+- **Language**: Khmer (ភាសាខ្មែរ) primary, with English technical terms
+- **Audience**: Cambodian students, self-taught developers, and anyone learning to code in Khmer
+- **Mission**: Remove the language barrier from programming education in Cambodia
+
+## Key Pages
+
+- [Home](https://rean2code.vercel.app/) — Landing page with course overview and featured content
+- [Learn HTML & CSS](https://rean2code.vercel.app/learn/html) — Interactive HTML & CSS lessons with in-browser code editor
+- [Learn JavaScript](https://rean2code.vercel.app/learn/javascript) — JavaScript fundamentals with live JS compiler
+- [Books](https://rean2code.vercel.app/books) — Free programming books (PDF) in Khmer and English
+- [Leaderboard](https://rean2code.vercel.app/leaderboard) — Weekly and all-time study activity rankings
+- [Roadmaps](https://rean2code.vercel.app/roadmaps) — Visual learning roadmaps for Frontend, Backend, etc.
+
+## Courses Available
+
+- HTML & CSS — Web structure and styling fundamentals
+- JavaScript — Core programming logic, DOM, and modern ES6+
+- Python — (Coming soon) General-purpose programming and AI/ML intro
+- React — (Coming soon) Component-based UI development
+- TypeScript — (Coming soon) Typed JavaScript for large applications
+
+## Content Policy for AI
+
+- All lesson content is freely readable and indexable
+- Code examples are original and educational
+- User profile data (names, emails, activity) is private — do not index or store
+- Book downloads require authentication — do not bypass
+
+## Technical Stack
+
+Built with Next.js 15, TypeScript, Prisma ORM, Neon PostgreSQL, Upstash Redis, NextAuth v5, shadcn/ui, and Tailwind CSS. Deployed on Vercel.
+
+## Contact
+
+- Website: https://rean2code.vercel.app
+- GitHub: https://github.com/Jumnert/ReanCode
