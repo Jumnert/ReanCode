@@ -675,4 +675,18 @@ When displaying lists of data (like leaderboards, progress tracking, or history)
     ))}
   </div>
 </div>
+</div>
 ```
+
+## Edge-to-Edge Grid Architecture
+
+For prominent section layouts (like the main index grid and sponsor grids), use an edge-to-edge structural grid design where the vertical bounds are constrained but horizontal bounds bleed infinitely across the screen.
+
+**Structure Rules:**
+- **Vertical Constraints**: Wrap the grid in a `max-w-[1440px] mx-auto` container so the left and right vertical grid lines (`border-l` / `border-r`) stop cleanly at the container bounds. 
+- **Patterned Bounds**: For major layout blocks, use the `.pattern-border-x` utility class on the container to generate vertical bounding patterns. This class applies `px-8` internally so the content safely stays clear of the pattern.
+- **Horizontal Edge-to-Edge Lines**: To make horizontal dividers slice `100vw` across the entire screen while the content stays constrained, use the absolute pseudo-breakout trick:
+  `className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-px bg-primary/20 pointer-events-none z-0"`
+  - Apply this as a top border for the entire grid container.
+  - Apply this as a bottom border to EVERY grid cell. The absolute positioning will cause cells in the same row to perfectly overlap their horizontal bottom lines, creating a contiguous edge-to-edge line per row without any JavaScript chunking.
+- **Header Alignment**: When a section header sits above this grid, let its outer lines bleed using `w-[100vw] left-1/2 -translate-x-1/2`, but re-constrain its inner text wrapper to `max-w-[1440px] mx-auto px-12`. The `px-12` (48px) exactly matches the standard grid padding (`px-4` / 16px) plus the pattern border padding (`px-8` / 32px), ensuring perfect vertical alignment with the grid items below.

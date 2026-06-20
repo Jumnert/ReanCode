@@ -2,9 +2,10 @@
 
 import React, { useState, useRef } from "react";
 import { Download, BookOpen, Search } from "lucide-react";
-import { haptic } from "../../src/lib/haptic";
+import { haptic } from "../../../src/lib/haptic";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useTranslations } from "next-intl";
 
 gsap.registerPlugin(useGSAP);
 
@@ -264,6 +265,8 @@ const goalKickerBooks = [
 export default function BooksPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const container = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('Books');
 
   useGSAP(() => {
     gsap.from(".book-card", {
@@ -273,42 +276,74 @@ export default function BooksPage() {
       stagger: 0.05,
       ease: "power3.out",
     });
-  }, { scope: container, dependencies: [searchQuery] });
+    // Header Animation
+    gsap.fromTo(
+      headerRef.current,
+      { opacity: 0, y: -20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+    );
+
+    // Cards Stagger Animation
+    gsap.fromTo(
+      ".book-card",
+      { opacity: 0, scale: 0.9, y: 20 },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.05,
+        ease: "back.out(1.2)",
+        clearProps: "all",
+      }
+    );
+  }, []);
+
+  const filteredBooks = goalKickerBooks.filter((book) =>
+    book.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleDownload = () => {
     haptic();
   };
 
-  const filteredBooks = goalKickerBooks.filter((book) =>
-    book.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
   return (
-    <div className="w-full bg-background min-h-screen" ref={container}>
-      <div className="max-w-7xl mx-auto border-x-2 border-primary/20">
-        <div>
-          {/* Header */}
-          <div className="mb-10 text-center md:text-left flex flex-col gap-3 pt-12 pb-4">
-            <span className="text-[12px] font-semibold tracking-wider uppercase text-[#7a7a7a] dark:text-zinc-400">
-              បណ្ណាល័យ (Library)
-            </span>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-[-0.28px] text-[#1d1d1f] dark:text-white">
-              សៀវភៅបច្ចេកវិទ្យាឥតគិតថ្លៃ
-            </h1>
-            <p className="text-[15px] text-[#7a7a7a] dark:text-zinc-400 max-w-xl leading-relaxed mx-auto md:mx-0">
-              ទាញយកសៀវភៅ GoalKicker ជា PDF ដើម្បីអានក្រៅបណ្តាញដោយឥតគិតថ្លៃ។
+    <div className="w-full min-h-screen bg-background flex flex-col items-center pt-8 md:pt-16 px-4 md:px-0 font-sans">
+      <div className="w-full max-w-7xl mx-auto border-x-2 border-primary/20 bg-background/50 backdrop-blur-sm relative">
+        
+        {/* Header Section */}
+        <div ref={headerRef} className="text-center py-12 md:py-20 px-4 relative overflow-hidden">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-64 bg-primary/10 rounded-full blur-3xl -z-10" />
+          
+          <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-2xl mb-6 shadow-sm border border-primary/20">
+            <BookOpen className="h-8 w-8 text-primary" />
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-4 tracking-tight drop-shadow-sm" style={{ fontFamily: "var(--font-kantumruy-pro)" }}>
+            {t('title')}
+          </h1>
+          <div className="flex items-center justify-center gap-3 mt-6 mb-8">
+            <div className="h-px w-12 bg-primary/30"></div>
+            <p className="text-lg md:text-xl text-muted-foreground font-medium bg-primary/5 px-4 py-1.5 rounded-full border border-primary/10">
+              {t('subtitle')}
             </p>
+            <div className="h-px w-12 bg-primary/30"></div>
           </div>
 
+          <p className="text-[15px] text-muted-foreground max-w-xl leading-relaxed mx-auto md:mx-auto text-center mb-10">
+            {t('description')}
+          </p>
+
           {/* Search Bar */}
-          <div className="mb-8 relative max-w-md mx-auto md:mx-0">
+          <div className="relative max-w-md mx-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-muted-foreground" />
             </div>
             <input
               type="text"
               className="block w-full pl-10 pr-4 py-3 bg-card border border-border rounded-full text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm"
-              placeholder="ស្វែងរកសៀវភៅ (ឧ. HTML, Python, React)..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -359,7 +394,7 @@ export default function BooksPage() {
                         className="flex w-full items-center justify-center gap-2 bg-white/15 hover:bg-primary text-white font-semibold py-2.5 px-4 rounded-full backdrop-blur-md transition-all duration-300 text-[13px] active:scale-[0.97] border border-white/20 hover:border-transparent shadow-lg"
                       >
                         <Download className="w-3.5 h-3.5" />
-                        ទាញយក PDF
+                        {t('downloadPdf')}
                       </a>
                     </div>
                   </div>
@@ -371,7 +406,7 @@ export default function BooksPage() {
         ) : (
           <div className="py-20 text-center border-2 border-dashed border-border rounded-xl">
             <p className="text-muted-foreground text-lg">
-              មិនមានសៀវភៅ "{searchQuery}" ទេ
+              {t('noBooksFound', { query: searchQuery })}
             </p>
           </div>
         )}

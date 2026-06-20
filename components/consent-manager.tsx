@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 // Design tokens from DESIGN.md / globals.css
 // cookie-consent-card: bg=surface-dark (#181715), text=on-dark (#faf9f5), rounded=lg (12px), padding=24px
 
-export function ConsentManager({ children }: { children: React.ReactNode }) {
+export function ConsentManager({ children }: { children?: React.ReactNode }) {
   return (
     <ConsentManagerProvider
       options={{

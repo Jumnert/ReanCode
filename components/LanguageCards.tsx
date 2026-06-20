@@ -242,61 +242,64 @@ const languages = [
 export default function LanguageCards() {
  return (
  <div className="w-full bg-background py-16">
- <div className="max-w-7xl mx-auto px-4">
- 
- {/* Section Header */}
- <div className="mb-10 text-center md:text-left flex flex-col gap-2">
- <span className="text-[12px] font-semibold tracking-wider uppercase text-[#7a7a7a] dark:text-zinc-400">
- មាតិកាសិក្សា
- </span>
- <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.28px] text-[#1d1d1f] dark:text-white">
- ភាសាកម្មវិធីដែលមានផ្ដល់ជូន
- </h2>
- <p className="text-[15px] text-[#7a7a7a] dark:text-zinc-400 max-w-lg">
- ជ្រើសរើសភាសាកម្មវិធីដែលអ្នកចង់រៀន ដើម្បីបណ្តុះជំនាញបច្ចេកវិទ្យារបស់អ្នក។
- </p>
- </div>
+  {/* Section Header */}
+  <div className="mb-10 flex flex-col border-y border-primary/20 divide-y divide-primary/20 w-[100vw] relative left-1/2 -translate-x-1/2">
+    <div className="w-full">
+      <div className="w-full max-w-[1440px] mx-auto px-12 py-1.5 text-center md:text-left">
+        <span className="text-[12px] font-semibold tracking-wider uppercase text-[#7a7a7a] dark:text-zinc-400 block">
+        មាតិកាសិក្សា
+        </span>
+      </div>
+    </div>
+    <div className="w-full">
+      <div className="w-full max-w-[1440px] mx-auto px-12 py-1.5 text-center md:text-left">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-[-0.28px] text-[#1d1d1f] dark:text-white">
+        ភាសាកម្មវិធីដែលមានផ្ដល់ជូន
+        </h2>
+      </div>
+    </div>
+    <div className="w-full">
+      <div className="w-full max-w-[1440px] mx-auto px-12 py-1.5 text-center md:text-left">
+        <p className="text-[15px] text-[#7a7a7a] dark:text-zinc-400 max-w-lg mx-auto md:mx-0">
+        ជ្រើសរើសភាសាកម្មវិធីដែលអ្នកចង់រៀន ដើម្បីបណ្តុះជំនាញបច្ចេកវិទ្យារបស់អ្នក។
+        </p>
+      </div>
+    </div>
+  </div>
 
- {/* Grid layout */}
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l-2 border-t-2 border-primary/20">
+  <div className="w-full mx-auto px-4 relative">
+  
+  {/* Top Edge-to-Edge Line */}
+  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-px bg-primary/20 pointer-events-none z-0" />
+  
+  {/* Grid layout */}
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-l border-primary/20 relative z-10">
  {languages.map((lang) => {
   const isAvailable = lang.name === "HTML & CSS" || lang.name === "JavaScript";
   return (
-  <Link 
-    href={isAvailable ? lang.path : "#"} 
-    key={lang.name} 
-    className={`block group border-r-2 border-b-2 border-primary/20 ${!isAvailable && "opacity-80 grayscale-[30%]"}`}
-    onClick={() => {
-      if (isAvailable) {
-        fetch('/api/study', { method: 'POST' }).catch(console.error);
-      }
-    }}
-  >
-  <div className={`h-full p-6 bg-white dark:bg-[#1d1d1f] transition-all duration-300 flex items-center gap-5 shadow-none ${isAvailable ? lang.bgClass + " cursor-pointer" : "cursor-default"}`}>
-  
-  {/* Icon box */}
-  <div className={`size-16 flex items-center justify-center flex-shrink-0 transition-opacity ${isAvailable ? "opacity-80 group-hover:opacity-100" : "opacity-50"}`}>
-  <img src={lang.iconPath} alt={lang.name} className="w-12 h-12" />
-  </div>
-
-  {/* Info */}
-  <div className="flex-1 min-w-0 flex flex-col">
-  <div className="flex items-center gap-2">
-  <h3 className={`font-bold text-[17px] leading-tight transition-colors ${isAvailable ? "text-[#1d1d1f] dark:text-white group-hover:text-primary dark:group-hover:text-[#2997ff]" : "text-[#1d1d1f]/70 dark:text-white/70"}`}>
-  {lang.name}
-  </h3>
-  {!isAvailable && (
-  <span className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-[10px] text-zinc-500 dark:text-zinc-400 font-medium whitespace-nowrap tracking-wide border border-border">មកដល់ឆាប់ៗ</span>
-  )}
-  </div>
-  <span className={`text-[13px] font-medium mt-0.5 ${isAvailable ? "text-[#7a7a7a] dark:text-zinc-400" : "text-[#7a7a7a]/60 dark:text-zinc-500"}`}>
-  {lang.nameKh}
-  </span>
-  <p className={`text-[13px] mt-1 leading-snug ${isAvailable ? "text-[#7a7a7a] dark:text-zinc-450" : "text-[#7a7a7a]/60 dark:text-zinc-500"}`}>
-  {lang.description}
-  </p>
-  </div>
-  </div>
+   <Link 
+     href={isAvailable ? lang.path : "#"} 
+     key={lang.name} 
+     className={`block group relative flex items-center justify-center py-6 md:py-8 border-r border-primary/20 transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${!isAvailable ? "opacity-50 grayscale" : ""}`}
+     onClick={(e) => {
+       if (!isAvailable) e.preventDefault();
+       else {
+         fetch('/api/study', { method: 'POST' }).catch(console.error);
+       }
+     }}
+   >
+     {/* Bottom Edge-to-Edge Line */}
+     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[100vw] h-px bg-primary/20 pointer-events-none z-0" />
+     
+     {/* Content */}
+     <div className="relative z-10 flex items-center justify-center gap-4">
+       <div className={`w-14 h-14 md:w-16 md:h-16 flex-shrink-0 flex items-center justify-center`}>
+         <img src={lang.iconPath} alt={lang.name} className="w-full h-full object-contain" />
+       </div>
+       <span className={`font-bold text-[20px] md:text-[24px] tracking-tight transition-colors ${isAvailable ? "text-[#1d1d1f] dark:text-white group-hover:text-primary" : "text-[#1d1d1f]/70 dark:text-white/70"}`}>
+         {lang.name}
+       </span>
+     </div>
   </Link>
   );
   })}

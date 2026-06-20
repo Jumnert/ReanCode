@@ -5,6 +5,7 @@ import { Trophy, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { LeaderboardService } from "@/services/leaderboard.service";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: "តារាងចំណាត់ថ្នាក់ - រៀន២កូដ",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export const revalidate = 60; // Revalidate every minute
 
 export default async function LeaderboardPage() {
+  const t = await getTranslations('Leaderboard');
   const leaderboard = await LeaderboardService.getAllTime();
 
   return (
@@ -24,10 +26,10 @@ export default async function LeaderboardPage() {
             <Trophy className="h-10 w-10 text-primary" />
           </div>
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground font-kantumruy">
-            តារាងចំណាត់ថ្នាក់
+            {t('title')}
           </h1>
           <p className="mt-4 text-[17px] text-muted-foreground max-w-lg mx-auto">
-            សិស្សដែលបានចំណាយពេលរៀននិងអនុវត្តន៍ច្រើនជាងគេនៅលើ រៀន២កូដ
+            {t('description')}
           </p>
         </div>
 
@@ -36,7 +38,7 @@ export default async function LeaderboardPage() {
         <div className="bg-background">
           {leaderboard.length === 0 ? (
             <div className="p-10 text-center text-muted-foreground">
-              មិនទាន់មានទិន្នន័យនៅឡើយទេ
+              {t('noData')}
             </div>
           ) : (
             <div className="flex flex-col">

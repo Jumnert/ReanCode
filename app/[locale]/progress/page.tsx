@@ -6,6 +6,7 @@ import { Activity, Clock, BookOpen, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
+import { getTranslations } from "next-intl/server"
 
 export const metadata = {
   title: "Learning Progress - រៀន២កូដ",
@@ -23,6 +24,7 @@ const formatTime = (seconds: number) => {
 }
 
 export default async function ProgressPage() {
+  const t = await getTranslations('Progress')
   const session = await auth()
   if (!session?.user?.id) {
     redirect("/login")
@@ -75,24 +77,24 @@ export default async function ProgressPage() {
             <Activity className="h-8 w-8 text-[#cc785c]" />
           </div>
           <h1 className="text-[36px] md:text-[42px] font-['Copernicus',_serif] tracking-tight text-[#141413] dark:text-[#faf9f5] mb-4">
-            My Progress
+            {t('title')}
           </h1>
           <p className="text-[16px] text-[#6c6a64] dark:text-[#a09d96] font-['StyreneB',_sans-serif] max-w-lg mx-auto">
-            Track your coding journey, completed lessons, and active learning time across different languages.
+            {t('description')}
           </p>
           
           <div className="flex justify-center gap-8 md:gap-12 mt-10">
             <div className="flex flex-col text-center">
               <span className="text-[28px] font-['StyreneB',_sans-serif] font-bold text-[#141413] dark:text-[#faf9f5]">{progress.completedLessons}</span>
-              <span className="text-[12px] text-[#8e8b82] dark:text-[#a09d96] font-medium uppercase tracking-wider mt-1">Lessons</span>
+              <span className="text-[12px] text-[#8e8b82] dark:text-[#a09d96] font-medium uppercase tracking-wider mt-1">{t('lessons')}</span>
             </div>
             <div className="flex flex-col text-center">
               <span className="text-[28px] font-['StyreneB',_sans-serif] font-bold text-[#141413] dark:text-[#faf9f5]">{formatTime(progress.totalTimeSpent)}</span>
-              <span className="text-[12px] text-[#8e8b82] dark:text-[#a09d96] font-medium uppercase tracking-wider mt-1">Time Spent</span>
+              <span className="text-[12px] text-[#8e8b82] dark:text-[#a09d96] font-medium uppercase tracking-wider mt-1">{t('timeSpent')}</span>
             </div>
             <div className="flex flex-col text-center">
               <span className="text-[28px] font-['StyreneB',_sans-serif] font-bold text-[#141413] dark:text-[#faf9f5]">{streak.count}</span>
-              <span className="text-[12px] text-[#8e8b82] dark:text-[#a09d96] font-medium uppercase tracking-wider mt-1">Streak</span>
+              <span className="text-[12px] text-[#8e8b82] dark:text-[#a09d96] font-medium uppercase tracking-wider mt-1">{t('streak')}</span>
             </div>
           </div>
         </div>
@@ -143,15 +145,15 @@ export default async function ProgressPage() {
           ) : (
             <div className="p-16 text-center">
               <BookOpen className="w-12 h-12 text-[#8e8b82] dark:text-[#6c6a64] mx-auto mb-6 opacity-80" />
-              <h3 className="text-[22px] font-['StyreneB',_sans-serif] font-bold mb-3 text-[#141413] dark:text-[#faf9f5]">No learning history yet</h3>
+              <h3 className="text-[22px] font-['StyreneB',_sans-serif] font-bold mb-3 text-[#141413] dark:text-[#faf9f5]">{t('noHistory')}</h3>
               <p className="text-[#6c6a64] dark:text-[#a09d96] mb-8 text-[16px]">
-                Start a roadmap or a course to see your progress tracked here.
+                {t('noHistoryDesc')}
               </p>
               <Link 
                 href="/roadmaps" 
                 className="inline-flex items-center justify-center rounded-none border-2 border-[#cc785c] bg-[#cc785c] hover:bg-transparent hover:text-[#cc785c] text-white px-6 py-3 text-[14px] font-bold transition-colors"
               >
-                Explore Roadmaps
+                {t('exploreRoadmaps')}
               </Link>
             </div>
           )}

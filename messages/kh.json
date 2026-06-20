@@ -1,0 +1,102 @@
+{
+  "Navbar": {
+    "books": "សៀវភៅ",
+    "exercises": "លំហាត់",
+    "roadmaps": "ផែនទីបង្ហាញផ្លូវ",
+    "leaderboard": "ចំណាត់ថ្នាក់",
+    "settings": "ការកំណត់",
+    "profile": "ប្រវត្តិរូប",
+    "logout": "ចាកចេញ",
+    "login": "ចូលគណនី",
+    "getStarted": "ចាប់ផ្តើម",
+    "onlineNow": "កំពុងប្រើប្រាស់",
+    "english": "English",
+    "khmer": "Khmer"
+  },
+  "Settings": {
+    "account": "គណនី",
+    "myProfile": "ប្រវត្តិរូបរបស់ខ្ញុំ",
+    "general": "ទូទៅ",
+    "preferences": "ចំណូលចិត្ត",
+    "applications": "កម្មវិធី",
+    "workspace": "កន្លែងធ្វើការ",
+    "settings": "ការកំណត់",
+    "members": "សមាជិក",
+    "upgrade": "ដំឡើង",
+    "security": "សុវត្ថិភាព",
+    "templates": "គំរូ",
+    "billing": "វិក្កយបត្រ",
+    "roadmaps": "ផែនទីបង្ហាញផ្លូវ",
+    "reportIssue": "រាយការណ៍បញ្ហា",
+    "logout": "ចាកចេញ",
+    "myNotifications": "ការជូនដំណឹងរបស់ខ្ញុំ",
+    "notifyWhen": "ជូនដំណឹងខ្ញុំនៅពេល...",
+    "emailDigest": "សង្ខេបអ៊ីមែល",
+    "emailDigestDesc": "ទទួលអ៊ីមែលសង្ខេបពីសកម្មភាពប្រចាំថ្ងៃរបស់អ្នក",
+    "newExercises": "លំហាត់ថ្មី",
+    "newExercisesDesc": "ជូនដំណឹងនៅពេលមានលំហាត់ថ្មី",
+    "mySettings": "ការកំណត់របស់ខ្ញុំ",
+    "appearance": "រូបរាង",
+    "appearanceDesc": "ប្ដូររូបរាងនិងទម្រង់",
+    "twoFactor": "ការផ្ទៀងផ្ទាត់ពីរជំហាន",
+    "twoFactorDesc": "បន្ថែមសុវត្ថិភាពមួយកម្រិតទៀត",
+    "language": "ភាសា",
+    "languageDesc": "ផ្លាស់ប្តូរចំណូលចិត្តភាសា",
+    "lofiMusic": "តន្ត្រី Lofi",
+    "lofiMusicDesc": "ជ្រើសរើសចង្វាក់តន្ត្រីពេលសរសេរកូដ",
+    "currentlyPlaying": "កំពុងចាក់:",
+    "musicTrack": "បទចម្រៀង"
+  },
+  "Home": {
+    "freeTextbooks": "សៀវភៅសិក្សាឥតគិតថ្លៃ",
+    "codeBookLibrary": "បណ្ណាល័យសៀវភៅកូដ",
+    "searchBooks": "ស្វែងរកសៀវភៅ",
+    "freePdfBooks": "សៀវភៅ PDF ឥតគិតថ្លៃ",
+    "competencyTests": "តេស្តសមត្ថភាព និងការប្រឡង",
+    "codeExercises": "លំហាត់អនុវត្តកូដ",
+    "startCodeTest": "ចាប់ផ្តើមតេស្តកូដ",
+    "interactiveCode": "លំហាត់កូដអន្តរកម្ម"
+  },
+  "Books": {
+    "title": "បណ្ណាល័យសៀវភៅកូដ",
+    "subtitle": "សៀវភៅកូដឥតគិតថ្លៃសម្រាប់អ្នក",
+    "description": "ទាញយកសៀវភៅ GoalKicker ជា PDF ដើម្បីអានក្រៅបណ្តាញដោយឥតគិតថ្លៃ។",
+    "searchPlaceholder": "ស្វែងរកសៀវភៅ (ឧ. HTML, Python, React)...",
+    "downloadPdf": "ទាញយក PDF",
+    "noBooksFound": "មិនមានសៀវភៅ \"{query}\" ទេ"
+  },
+  "Exercises": {
+    "title": "លំហាត់កូដ",
+    "description": "សាកល្បងសមត្ថភាពសរសេរកូដរបស់អ្នកជាមួយនឹងលំហាត់អន្តរកម្មតាមភាសាផ្សេងៗគ្នា។",
+    "exerciseSingular": "លំហាត់",
+    "exercisePlural": "លំហាត់",
+    "available": "មាន",
+    "noExercises": "មិនទាន់មានលំហាត់ទេ",
+    "noExercisesDesc": "យើងមិនទាន់មានលំហាត់អន្តរកម្មនៅលើផ្លេតហ្វមនៅឡើយទេ។ សូមពិនិត្យមើលពេលក្រោយ!"
+  },
+  "Leaderboard": {
+    "title": "តារាងចំណាត់ថ្នាក់",
+    "description": "សិស្សដែលបានចំណាយពេលរៀននិងអនុវត្តន៍ច្រើនជាងគេនៅលើ រៀន២កូដ",
+    "noData": "មិនទាន់មានទិន្នន័យនៅឡើយទេ"
+  },
+  "Roadmaps": {
+    "title": "ជ្រើសរើសភាសាសរសេរកូដ",
+    "description": "ស្វែងយល់ពីផែនទីសិក្សាលម្អិតសម្រាប់ភាសាសរសេរកូដនីមួយៗ។ ជ្រើសរើសភាសាខាងក្រោមដើម្បីចាប់ផ្តើម។",
+    "htmlDesc": "រចនាសម្ព័ន្ធ និងការតុបតែងវេបសាយ",
+    "jsDesc": "ភាសាសម្រាប់បង្កើតអន្តរកម្មវេបសាយ",
+    "reactDesc": "បណ្ណាល័យសម្រាប់បង្កើត UI",
+    "nextjsDesc": "Framework សម្រាប់ React",
+    "pythonDesc": "ភាសាសម្រាប់ទិន្នន័យ និង AI",
+    "sqlDesc": "ភាសាសម្រាប់គ្រប់គ្រងទិន្នន័យ"
+  },
+  "Progress": {
+    "title": "វឌ្ឍនភាពរបស់ខ្ញុំ",
+    "description": "តាមដានដំណើរនៃការសរសេរកូដ មេរៀនដែលបានបញ្ចប់ និងពេលវេលាសិក្សាសកម្មរបស់អ្នកនៅតាមភាសាផ្សេងៗគ្នា។",
+    "lessons": "មេរៀន",
+    "timeSpent": "ពេលវេលាសិក្សា",
+    "streak": "Streak",
+    "noHistory": "មិនទាន់មានប្រវត្តិនៃការសិក្សាទេ",
+    "noHistoryDesc": "ចាប់ផ្តើមផែនទីសិក្សា ឬវគ្គសិក្សាដើម្បីមើលឃើញពីវឌ្ឍនភាពរបស់អ្នក។",
+    "exploreRoadmaps": "ស្វែងយល់ពីផែនទីសិក្សា"
+  }
+}

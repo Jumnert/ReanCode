@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { useTranslations } from 'next-intl';
+import { usePathname, useRouter } from '@/i18n/routing';
 import { useSession, signOut } from "@/lib/auth-client"
 import { SettingsModal, MUSIC_TRACKS, Track } from "@/components/SettingsModal"
 import { Code2, LogOut, Settings as SettingsIcon, User, UserPlus, LogIn, Menu, X, Music } from "lucide-react"
@@ -13,6 +14,7 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import { useTheme } from "next-themes"
 import { Activity } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { LanguageSwitcher } from "./LanguageSwitcher"
 import {
  DropdownMenu,
  DropdownMenuContent,
@@ -38,7 +40,14 @@ export default function Navbar() {
  const router = useRouter()
  const { data: session } = useSession()
  const { resolvedTheme, setTheme } = useTheme()
+ const [mounted, setMounted] = React.useState(false)
  const [isOpen, setIsOpen] = React.useState(false)
+ const t = useTranslations('Navbar')
+ 
+ React.useEffect(() => {
+   // eslint-disable-next-line react-hooks/set-state-in-effect
+   setMounted(true)
+ }, [])
  
  // Audio Logic
  const [isMusicPlaying, setIsMusicPlaying] = React.useState(false)
@@ -55,29 +64,51 @@ export default function Navbar() {
    }
    
    if (isMusicPlaying) {
-     audioRef.current.play().catch(e => {
-       console.warn("Autoplay blocked, waiting for manual interaction", e)
-       setIsMusicPlaying(false)
-     })
+     audioRef.current.play().catch(() => {})
    }
  }, [currentTrack])
 
- // Initial autoplay logic
  React.useEffect(() => {
-   if (audioRef.current) {
-     const playPromise = audioRef.current.play()
-     if (playPromise !== undefined) {
-       playPromise
-         .then(() => {
-           setIsMusicPlaying(true)
-         })
-         .catch(e => {
-           console.warn("Autoplay blocked, waiting for manual interaction", e)
-           setIsMusicPlaying(false)
-         })
-     }
-   }
- }, [])
+    const handleFirstInteraction = () => {
+      if (audioRef.current && audioRef.current.paused) {
+        const playPromise = audioRef.current.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsMusicPlaying(true)
+            })
+            .catch(() => {
+              // Silently ignore if still blocked
+            })
+        }
+      }
+      document.removeEventListener("click", handleFirstInteraction)
+      document.removeEventListener("keydown", handleFirstInteraction)
+      document.removeEventListener("touchstart", handleFirstInteraction)
+    }
+
+    if (audioRef.current) {
+      const playPromise = audioRef.current.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsMusicPlaying(true)
+          })
+          .catch(() => {
+            // Autoplay blocked, wait for first interaction
+            document.addEventListener("click", handleFirstInteraction)
+            document.addEventListener("keydown", handleFirstInteraction)
+            document.addEventListener("touchstart", handleFirstInteraction)
+          })
+      }
+    }
+
+    return () => {
+      document.removeEventListener("click", handleFirstInteraction)
+      document.removeEventListener("keydown", handleFirstInteraction)
+      document.removeEventListener("touchstart", handleFirstInteraction)
+    }
+  }, [])
 
  React.useEffect(() => {
    return () => {
@@ -110,10 +141,10 @@ export default function Navbar() {
  }
 
  const navLinks = [
- { href: "/exercises", label: "លំហាត់" },
- { href: "/roadmaps", label: "ផែនទីរៀន" },
- { href: "/leaderboard", label: "ចំណាត់ថ្នាក់" },
- { href: "/progress", label: "វឌ្ឍនភាព (Progress)" },
+ { href: "/exercises", label: t('exercises') },
+ { href: "/roadmaps", label: t('roadmaps') },
+ { href: "/leaderboard", label: t('leaderboard') },
+ { href: "/books", label: t('books') },
  ]
 
  return (
@@ -136,7 +167,7 @@ export default function Navbar() {
  href={link.href}
  className={cn(
  navigationMenuTriggerStyle(),
- "bg-transparent text-muted-foreground hover:text-foreground font-medium text-sm transition-colors cursor-pointer",
+ "bg-transparent text-muted-foreground hover:text-foreground font-medium text-base transition-colors cursor-pointer",
  pathname.startsWith(link.href) && "text-primary font-semibold bg-primary/5"
  )}
  >
@@ -151,12 +182,17 @@ export default function Navbar() {
 
  {/* Right Actions */}
  <div className="flex items-center gap-3">
- <AnimatedThemeToggler 
-    variant="circle" 
-    duration={700}
-    theme={resolvedTheme as "light" | "dark"} 
-    onThemeChange={setTheme} 
-  />
+ <LanguageSwitcher />
+ {mounted ? (
+   <AnimatedThemeToggler 
+      variant="circle" 
+      duration={700}
+      theme={resolvedTheme as "light" | "dark"} 
+      onThemeChange={setTheme} 
+    />
+ ) : (
+   <div className="w-9 h-9" />
+ )}
 
  {/* Desktop Authentication controls */}
  <div className="hidden md:flex items-center gap-3">
@@ -190,13 +226,13 @@ export default function Navbar() {
  <Link href="/login">
  <Button variant="outline" size="sm" className="text-sm font-medium border-primary text-primary hover:bg-primary/10 hover:text-primary rounded-full px-4">
  <LogIn className="size-4 mr-1.5" />
- ចូលគណនី
+ {t('login')}
  </Button>
  </Link>
  <Link href="/signup">
  <Button size="sm" className="bg-primary hover:bg-primary text-white rounded-full font-medium px-4">
  <UserPlus className="size-4 mr-1.5" />
- ចាប់ផ្តើម
+ {t('getStarted')}
  </Button>
  </Link>
  </>
@@ -255,15 +291,15 @@ export default function Navbar() {
  </div>
  <Button variant="outline" size="sm" onClick={() => { setIsOpen(false); router.push("/profile") }} className="w-full justify-start">
  <User className="size-4 mr-2" />
- ប្រវត្តិរូប
+ {t('profile')}
  </Button>
  <Button variant="outline" size="sm" onClick={() => { setIsOpen(false); router.push("/settings") }} className="w-full justify-start mt-2 hidden">
  <SettingsIcon className="size-4 mr-2" />
- ការកំណត់
+ {t('settings')}
  </Button>
  <Button variant="destructive" size="sm" onClick={() => { setIsOpen(false); handleLogout() }} className="w-full justify-start mt-2">
  <LogOut className="size-4 mr-2" />
- ចាកចេញ
+ {t('logout')}
  </Button>
  </>
  ) : (
@@ -271,13 +307,13 @@ export default function Navbar() {
  <Link href="/login" onClick={() => setIsOpen(false)}>
  <Button variant="outline" size="sm" className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary rounded-full">
  <LogIn className="size-4 mr-1.5" />
- ចូលគណនី
+ {t('login')}
  </Button>
  </Link>
  <Link href="/signup" onClick={() => setIsOpen(false)}>
  <Button size="sm" className="w-full bg-primary hover:bg-primary text-white rounded-full">
  <UserPlus className="size-4 mr-1.5" />
- ចាប់ផ្តើម
+ {t('getStarted')}
  </Button>
  </Link>
  </>

@@ -98,10 +98,10 @@ export default function HeroCarousel() {
  };
 
  return (
- <div className="w-full bg-background pt-4 pb-2">
- <div className="max-w-7xl mx-auto px-4 md:px-6">
+ <div className="w-full bg-background pt-4 pb-0">
+ <div className="w-full mx-auto px-4 md:px-6">
  <div 
- className="relative w-full h-[320px] overflow-hidden rounded-[18px] border border-[#e0e0e0] dark:border-zinc-800 hover:border-primary transition-all active:scale-[0.99] bg-white dark:bg-[#272729] shadow-none cursor-grab active:cursor-grabbing select-none"
+ className="relative w-full h-[320px] overflow-hidden rounded-t-[18px] border border-[#e0e0e0] dark:border-zinc-800 hover:border-primary transition-all active:scale-[0.99] bg-white dark:bg-[#272729] shadow-none cursor-grab active:cursor-grabbing select-none"
  onTouchStart={handleTouchStart}
  onTouchMove={handleTouchMove}
  onTouchEnd={handleTouchEnd}

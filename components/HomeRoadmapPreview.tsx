@@ -39,7 +39,7 @@ export default function HomeRoadmapPreview() {
     <div className="w-full bg-background py-8 md:py-12 relative overflow-hidden flex flex-col items-center">
       <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
       
-      <div className="w-full max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
+      <div className="w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
         
         {/* Left Side: Text and Button */}
         <div className="flex flex-col items-start text-left max-w-xl">

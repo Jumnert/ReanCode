@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Code2, Globe, Cpu, Database, Blocks, LayoutTemplate } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -7,27 +8,28 @@ export const metadata: Metadata = {
   description: "ផែនទីសិក្សាបង្ហាញពីការវិវឌ្ឍន៍នៃការរៀនសរសេរកូដសម្រាប់ភាសានីមួយៗ",
 };
 
-const LANGUAGES = [
-  { id: "html", name: "HTML & CSS", icon: <LayoutTemplate className="size-6 text-primary" />, desc: "រចនាសម្ព័ន្ធ និងការតុបតែងវេបសាយ" },
-  { id: "javascript", name: "JavaScript", icon: <Globe className="size-6 text-primary" />, desc: "ភាសាសម្រាប់បង្កើតអន្តរកម្មវេបសាយ" },
-  { id: "react", name: "React", icon: <Blocks className="size-6 text-primary" />, desc: "បណ្ណាល័យសម្រាប់បង្កើត UI" },
-  { id: "nextjs", name: "Next.js", icon: <Code2 className="size-6 text-primary" />, desc: "Framework សម្រាប់ React" },
-  { id: "python", name: "Python", icon: <Cpu className="size-6 text-primary" />, desc: "ភាសាសម្រាប់ទិន្នន័យ និង AI" },
-  { id: "sql", name: "SQL", icon: <Database className="size-6 text-primary" />, desc: "ភាសាសម្រាប់គ្រប់គ្រងទិន្នន័យ" },
-];
+export default async function RoadmapsPage() {
+  const t = await getTranslations('Roadmaps');
 
-export default function RoadmapsPage() {
+  const LANGUAGES = [
+    { id: "html", name: "HTML & CSS", icon: <LayoutTemplate className="size-6 text-primary" />, desc: t('htmlDesc') },
+    { id: "javascript", name: "JavaScript", icon: <Globe className="size-6 text-primary" />, desc: t('jsDesc') },
+    { id: "react", name: "React", icon: <Blocks className="size-6 text-primary" />, desc: t('reactDesc') },
+    { id: "nextjs", name: "Next.js", icon: <Code2 className="size-6 text-primary" />, desc: t('nextjsDesc') },
+    { id: "python", name: "Python", icon: <Cpu className="size-6 text-primary" />, desc: t('pythonDesc') },
+    { id: "sql", name: "SQL", icon: <Database className="size-6 text-primary" />, desc: t('sqlDesc') },
+  ];
+
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-background">
       <div className="max-w-7xl mx-auto border-x-2 border-primary/20 min-h-screen pb-20">
         
-        {/* Header Section */}
         <div className="pt-20 pb-16 px-6 text-center">
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-foreground font-kantumruy mb-6">
-            ជ្រើសរើសភាសាសរសេរកូដ
+            {t('title')}
           </h1>
           <p className="text-[17px] text-muted-foreground max-w-2xl mx-auto">
-            ស្វែងយល់ពីផែនទីសិក្សាលម្អិតសម្រាប់ភាសាសរសេរកូដនីមួយៗ។ ជ្រើសរើសភាសាខាងក្រោមដើម្បីចាប់ផ្តើម។
+            {t('description')}
           </p>
         </div>
 

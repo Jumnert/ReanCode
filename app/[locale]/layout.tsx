@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Kantumruy_Pro, Inter, Cormorant_Garamond, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import { UsernameSetupCheck } from "@/components/username-setup-check";
 import { GlobalClickSound } from "@/components/GlobalClickSound";
 
-import { Providers } from "./providers";
+import { Providers } from "../providers";
 import { ConsentManager } from "@/components/consent-manager";
 import { cn } from "@/lib/utils";
 
@@ -70,29 +70,49 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
- children,
+import {NextIntlClientProvider} from 'next-intl';
+import {getMessages, setRequestLocale} from 'next-intl/server';
+import {routing} from '@/i18n/routing';
+import {notFound} from 'next/navigation';
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({locale}));
+}
+
+export default async function RootLayout({
+  children,
+  params
 }: Readonly<{
- children: React.ReactNode;
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
- return (
- <html
- lang="km"
- className={cn("h-full", "antialiased", inter.variable, cormorantGaramond.variable, jetbrainsMono.variable, kantumruyPro.variable)}
- suppressHydrationWarning
- >
- <body
- className="min-h-full flex flex-col bg-background text-foreground font-sans"
- >
- <Providers>
-   <ConsentManager>
-     <UsernameSetupCheck />
-     <NavbarWrapper />
-     <GlobalClickSound />
-     {children}
-   </ConsentManager>
- </Providers>
- </body>
- </html>
- );
+  const { locale } = await params;
+  
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+
+  setRequestLocale(locale);
+
+  // Providing all messages to the client
+  // side is the easiest way to get started
+  const messages = await getMessages();
+
+  return (
+    <html lang={locale} className={`${inter.variable} ${cormorantGaramond.variable} ${jetbrainsMono.variable} ${kantumruyPro.variable} font-sans`} suppressHydrationWarning>
+      <body className="antialiased min-h-screen flex flex-col">
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <Providers>
+            <GlobalClickSound />
+            <NavbarWrapper />
+            <UsernameSetupCheck />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <ConsentManager />
+          </Providers>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
 }

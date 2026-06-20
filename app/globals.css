@@ -8,7 +8,7 @@
 
 /* Custom Fonts */
 body {
-    font-family: var(--font-sans), var(--font-kantumruy-pro), sans-serif;
+    font-family: var(--font-serif), var(--font-kantumruy-pro), serif;
 }
 
 h1, h2, h3, h4, h5, h6, .font-serif {
@@ -60,7 +60,7 @@ html {
 
 @theme inline {
     --font-heading: var(--font-serif);
-    --font-sans: var(--font-sans);
+    --font-sans: var(--font-serif);
     --font-serif: var(--font-serif);
     --font-mono: var(--font-mono);
     --color-sidebar-ring: var(--sidebar-ring);
@@ -216,4 +216,29 @@ html {
 /* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
+}
+
+.pattern-border-x {
+  position: relative;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+.pattern-border-x::before,
+.pattern-border-x::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(204, 120, 92, 0.1) 4px, rgba(204, 120, 92, 0.1) 5px);
+  border-left: 1px solid hsl(var(--border) / 0.6);
+  border-right: 1px solid hsl(var(--border) / 0.6);
+  pointer-events: none;
+  z-index: 20;
+}
+.pattern-border-x::before {
+  left: 0;
+}
+.pattern-border-x::after {
+  right: 0;
 }

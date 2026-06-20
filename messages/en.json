@@ -1,0 +1,102 @@
+{
+  "Navbar": {
+    "books": "Books",
+    "exercises": "Exercises",
+    "roadmaps": "Roadmaps",
+    "leaderboard": "Leaderboard",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout",
+    "login": "Login",
+    "getStarted": "Get Started",
+    "onlineNow": "Online Now",
+    "english": "English",
+    "khmer": "Khmer"
+  },
+  "Settings": {
+    "account": "Account",
+    "myProfile": "My Profile",
+    "general": "General",
+    "preferences": "Preferences",
+    "applications": "Applications",
+    "workspace": "Workspace",
+    "settings": "Settings",
+    "members": "Members",
+    "upgrade": "Upgrade",
+    "security": "Security",
+    "templates": "Templates",
+    "billing": "Billing",
+    "roadmaps": "Roadmaps",
+    "reportIssue": "Report Issue",
+    "logout": "Log out",
+    "myNotifications": "My Notifications",
+    "notifyWhen": "Notify me when...",
+    "emailDigest": "Email digest",
+    "emailDigestDesc": "Receive a daily email digest of your activity",
+    "newExercises": "New exercises",
+    "newExercisesDesc": "Notify me when new exercises are added",
+    "mySettings": "My Settings",
+    "appearance": "Appearance",
+    "appearanceDesc": "Customize the look and feel",
+    "twoFactor": "Two-factor authentication",
+    "twoFactorDesc": "Add an extra layer of security",
+    "language": "Language",
+    "languageDesc": "Change your language preferences",
+    "lofiMusic": "Lofi Background Music",
+    "lofiMusicDesc": "Select your vibe while coding",
+    "currentlyPlaying": "Currently Playing:",
+    "musicTrack": "Music Track"
+  },
+  "Home": {
+    "freeTextbooks": "Free Textbooks",
+    "codeBookLibrary": "Code Book Library",
+    "searchBooks": "Search Books",
+    "freePdfBooks": "Free PDF Books",
+    "competencyTests": "Competency Tests and Exams",
+    "codeExercises": "Code Practice Exercises",
+    "startCodeTest": "Start Code Test",
+    "interactiveCode": "Interactive Code Exercises"
+  },
+  "Books": {
+    "title": "Books Library",
+    "subtitle": "Free coding books for you",
+    "description": "Download GoalKicker books as PDFs to read offline for free.",
+    "searchPlaceholder": "Search books (e.g. HTML, Python, React)...",
+    "downloadPdf": "Download PDF",
+    "noBooksFound": "No books found for \"{query}\""
+  },
+  "Exercises": {
+    "title": "Exercises",
+    "description": "Test your programming skills with our interactive exercises across different languages.",
+    "exerciseSingular": "Exercise",
+    "exercisePlural": "Exercises",
+    "available": "available",
+    "noExercises": "No exercises yet",
+    "noExercisesDesc": "We haven't added any interactive exercises to the platform yet. Check back soon!"
+  },
+  "Leaderboard": {
+    "title": "Leaderboard",
+    "description": "Top students who have spent the most time learning and practicing on Rean2Code",
+    "noData": "No data available yet"
+  },
+  "Roadmaps": {
+    "title": "Select a Programming Language",
+    "description": "Explore detailed learning roadmaps for each programming language. Select a language below to get started.",
+    "htmlDesc": "Website structure and styling",
+    "jsDesc": "Language for creating website interactivity",
+    "reactDesc": "Library for building UI",
+    "nextjsDesc": "Framework for React",
+    "pythonDesc": "Language for Data and AI",
+    "sqlDesc": "Language for managing data"
+  },
+  "Progress": {
+    "title": "My Progress",
+    "description": "Track your coding journey, completed lessons, and active learning time across different languages.",
+    "lessons": "Lessons",
+    "timeSpent": "Time Spent",
+    "streak": "Streak",
+    "noHistory": "No learning history yet",
+    "noHistoryDesc": "Start a roadmap or a course to see your progress tracked here.",
+    "exploreRoadmaps": "Explore Roadmaps"
+  }
+}

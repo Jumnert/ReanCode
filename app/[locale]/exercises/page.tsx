@@ -4,6 +4,7 @@ import { Activity, Code2, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 
 import { redis, CacheKeys, CacheTTL } from "@/config/redis";
 
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function ExercisePage() {
+  const t = await getTranslations('Exercises');
   const cacheKey = CacheKeys.exerciseList();
   let courses = await redis.get<any>(cacheKey);
 
@@ -98,10 +100,10 @@ export default async function ExercisePage() {
               <Code2 className="h-8 w-8 text-[#cc785c]" />
             </div>
             <h1 className="text-[36px] md:text-[42px] font-['Copernicus',_serif] tracking-tight text-[#141413] dark:text-[#faf9f5] mb-4">
-              Exercises
+              {t('title')}
             </h1>
             <p className="text-[16px] text-[#6c6a64] dark:text-[#a09d96] font-['StyreneB',_sans-serif] max-w-lg mx-auto">
-              Test your programming skills with our interactive exercises across different languages.
+              {t('description')}
             </p>
           </div>
 
@@ -134,7 +136,7 @@ export default async function ExercisePage() {
                         {lang.name}
                       </span>
                       <span className="block text-[14px] text-[#6c6a64] dark:text-[#a09d96] font-medium mt-1">
-                        {lang.count} {lang.count === 1 ? 'Exercise' : 'Exercises'} available
+                        {lang.count} {lang.count === 1 ? t('exerciseSingular') : t('exercisePlural')} {t('available')}
                       </span>
                     </div>
                   </div>
@@ -148,9 +150,9 @@ export default async function ExercisePage() {
           ) : (
             <div className="p-16 text-center">
               <Code2 className="w-12 h-12 text-[#8e8b82] dark:text-[#6c6a64] mx-auto mb-6 opacity-80" />
-              <h3 className="text-[22px] font-['StyreneB',_sans-serif] font-bold mb-3 text-[#141413] dark:text-[#faf9f5]">No exercises yet</h3>
+              <h3 className="text-[22px] font-['StyreneB',_sans-serif] font-bold mb-3 text-[#141413] dark:text-[#faf9f5]">{t('noExercises')}</h3>
               <p className="text-[#6c6a64] dark:text-[#a09d96] mb-8 text-[16px]">
-                We haven't added any interactive exercises to the platform yet. Check back soon!
+                {t('noExercisesDesc')}
               </p>
             </div>
           )}
