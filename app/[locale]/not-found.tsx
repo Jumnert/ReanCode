@@ -1,69 +1,67 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence } from "motion/react";
 import Link from "next/link";
 
-import { AppleHelloEffectEnglish } from "@/components/apple-hello-effect/apple-hello-effect-english";
-import { AppleHelloEffectHindi } from "@/components/apple-hello-effect/apple-hello-effect-hindi";
-import { AppleHelloEffectSpanish } from "@/components/apple-hello-effect/apple-hello-effect-spanish";
-import { AppleHelloEffectVietnamese } from "@/components/apple-hello-effect/apple-hello-effect-vietnamese";
-
 export default function NotFound() {
-  const [index, setIndex] = useState(0);
-
-  const handleAnimationEnd = () => {
-    setIndex((prevIndex) => (prevIndex + 1) % 4);
-  };
-
-  const demos = [
-    <AppleHelloEffectEnglish
-      key="english"
-      onAnimationComplete={handleAnimationEnd}
-    />,
-  ];
-
   return (
-    <main className="fixed inset-0 z-[9999] bg-background flex flex-col items-center justify-center overflow-hidden">
-      {/* Top Logo */}
-      <div className="absolute top-8 left-8 md:top-12 md:left-12">
-        <Link
-          href="/"
-          className="text-2xl font-serif font-bold text-primary hover:opacity-80 transition-opacity"
-        >
-          Rean2Code
-        </Link>
-      </div>
+    <main className="min-h-screen bg-[#faf9f5] dark:bg-[#181715] flex flex-col relative overflow-hidden">
+      <div className="w-full max-w-[1440px] mx-auto pattern-border-x relative flex-1 flex flex-col items-center justify-center border-x border-[#cc785c]/20">
+        
+        {/* Horizontal Edge-to-Edge Lines */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-px bg-[#cc785c]/20 pointer-events-none z-0" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[100vw] h-px bg-[#cc785c]/20 pointer-events-none z-0" />
 
-      <div className="flex flex-col items-center gap-8 md:gap-16 z-10 w-full max-w-3xl px-4 mt-[-8vh]">
-        {/* Animated Hello text */}
-        <div className="h-24 md:h-40 w-full flex items-center justify-center text-[#1d1d1f] dark:text-white">
-          <AnimatePresence mode="sync">{demos[index]}</AnimatePresence>
+        {/* Top Logo */}
+        <div className="absolute top-8 left-12 md:top-12 md:left-12 z-20">
+          <Link
+            href="/"
+            className="text-2xl font-bold text-[#cc785c] hover:text-[#a9583e] transition-colors"
+            
+          >
+            Rean2Code
+          </Link>
         </div>
 
-        {/* 404 Content */}
-        <div className="flex flex-col items-center text-center gap-6">
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-[#1d1d1f] dark:text-white">
+        <div className="flex flex-col items-center text-center gap-6 z-10 w-full max-w-2xl px-4 mt-[-8vh]">
+          {/* 404 Headline */}
+          <h1 
+            className="text-6xl md:text-[80px] font-normal leading-[1.05] tracking-[-1.5px] text-[#141413] dark:text-[#faf9f5]"
+            style={{ fontFamily: "'Copernicus', 'Tiempos Headline', serif" }}
+          >
             404
           </h1>
-          <p className="text-base md:text-xl text-[#1d1d1f]/60 dark:text-white/60 max-w-md leading-relaxed font-medium">
-            We couldn't find the page you were looking for. It might have been
-            moved or doesn't exist.
+          <h2 
+            className="text-3xl md:text-[36px] font-normal leading-[1.15] tracking-[-0.5px] text-[#141413] dark:text-[#faf9f5] -mt-2"
+            style={{ fontFamily: "'Copernicus', 'Tiempos Headline', serif" }}
+          >
+            Page not found
+          </h2>
+
+          {/* Body Text */}
+          <p 
+            className="text-base md:text-[16px] text-[#3d3d3a] dark:text-[#a09d96] max-w-md leading-[1.55] mt-2"
+            style={{ fontFamily: "'StyreneB', 'Inter', sans-serif" }}
+          >
+            We couldn't find the page you're looking for. It may have been moved, deleted, or perhaps it never existed.
           </p>
 
+          {/* Primary Button */}
           <Link href="/">
-            <span className="mt-6 inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8 py-3.5 transition-transform active:scale-[0.95] shadow-sm">
-              Return to Homepage
+            <span 
+              className="mt-6 inline-flex items-center justify-center bg-[#cc785c] hover:bg-[#a9583e] text-[#ffffff] transition-colors shadow-sm active:scale-[0.98]"
+              style={{ 
+                fontFamily: "'StyreneB', 'Inter', sans-serif",
+                fontSize: "14px",
+                fontWeight: 500,
+                borderRadius: "8px",
+                padding: "12px 20px",
+                height: "40px"
+              }}
+            >
+              Return to homepage
             </span>
           </Link>
         </div>
-      </div>
-
-      {/* Decorative Background 404 */}
-      <div className="absolute -bottom-16 left-0 right-0 pointer-events-none opacity-[0.02] dark:opacity-[0.03] select-none flex justify-center">
-        <span className="text-foreground text-[40vw] font-bold text-center leading-none tracking-tighter whitespace-nowrap">
-          404
-        </span>
       </div>
     </main>
   );

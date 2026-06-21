@@ -275,17 +275,14 @@ export default function LanguageCards() {
   {/* Grid layout */}
   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-l border-primary/20 relative z-10">
  {languages.map((lang) => {
-  const isAvailable = lang.name === "HTML & CSS" || lang.name === "JavaScript";
+  const isAvailable = true; // All languages ungrayed
   return (
    <Link 
-     href={isAvailable ? lang.path : "#"} 
+     href={lang.path} 
      key={lang.name} 
-     className={`block group relative flex items-center justify-center py-6 md:py-8 border-r border-primary/20 transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${!isAvailable ? "opacity-50 grayscale" : ""}`}
+     className={`block group relative flex items-center justify-center py-6 md:py-8 border-r border-primary/20 transition-colors hover:bg-black/5 dark:hover:bg-white/5`}
      onClick={(e) => {
-       if (!isAvailable) e.preventDefault();
-       else {
-         fetch('/api/study', { method: 'POST' }).catch(console.error);
-       }
+       fetch('/api/study', { method: 'POST' }).catch(console.error);
      }}
    >
      {/* Bottom Edge-to-Edge Line */}

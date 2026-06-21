@@ -5,6 +5,7 @@ import LanguageCards from "@/components/LanguageCards";
 import { FluidGradientText } from "@/components/fluid-gradient-text";
 import { AngkorWatAbstract } from "@/components/AngkorWatAbstract";
 import HomeRoadmapPreview from "@/components/HomeRoadmapPreview";
+import HomeJobsPreview from "@/components/HomeJobsPreview";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
@@ -89,9 +90,17 @@ export default function Home() {
   {/* Line before Roadmap */}
   <div className="h-8 border-y border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }} />
 
-   {/* Roadmap Preview Section */}
+  {/* Roadmap Preview Section */}
   <div className="w-full max-w-[1440px] mx-auto pattern-border-x bg-background">
     <HomeRoadmapPreview />
+  </div>
+
+  {/* Line before Jobs */}
+  <div className="h-8 border-y border-border/60" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #cc785c1a 4px, #cc785c1a 5px)' }} />
+
+  {/* Jobs Section */}
+  <div className="w-full max-w-[1440px] mx-auto pattern-border-x">
+    <HomeJobsPreview />
   </div>
 
   {/* Footer Top Line */}

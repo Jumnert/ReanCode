@@ -297,8 +297,9 @@ export default function LearnPythonPage() {
   }
 
   return (
-    <div className="flex w-full min-h-screen">
-      <div className="flex-1 max-w-4xl mx-auto px-4 md:px-8 py-10 pb-24">
+    <div className="flex flex-col w-full h-[calc(100vh-64px)] overflow-hidden">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-8 md:py-12 scroll-smooth">
+        <div className="max-w-4xl mx-auto space-y-24 pb-20">
         
         {/* ── Hero ── */}
         <div className="space-y-4 mb-12">
@@ -349,6 +350,7 @@ export default function LearnPythonPage() {
           </button>
         </div>
 
+        </div>
       </div>
 
       <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>

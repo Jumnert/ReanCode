@@ -1,8 +1,9 @@
 "use client"
 
-import { Code2, Info, Lightbulb, AlertTriangle, CheckCircle2, Flame, Zap, Sparkles, FileText, Beaker } from "lucide-react"
+import { Code2, Info, Lightbulb, AlertTriangle, CheckCircle2, Flame, Zap, Sparkles, FileText, Beaker, Check, X, XCircle, AlertCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { HtmlCompiler } from "@/components/html-compiler"
+import { useWebHaptics } from "web-haptics/react"
 
 /* ─────────────────────── Per-section starter code ─────────────────────── */
 const code = {
@@ -695,12 +696,378 @@ const playSuccessChime = () => {
   }
 }
 
+/* ─────────────────────── Quizzes & Quiz Component ─────────────────────── */
+const QUIZZES: Record<string, {
+  questionKhmer: string;
+  questionEnglish: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}> = {
+  intro: {
+    questionKhmer: "តើពាក្យថា HTML មកពីពាក្យពេញមួយណា?",
+    questionEnglish: "What does HTML stand for?",
+    options: [
+      "Hyperlinks and Text Markup Language",
+      "HyperText Markup Language",
+      "Home Tool Markup Language",
+      "Hyperlink Text Management Language"
+    ],
+    correctIndex: 1,
+    explanation: "HTML តំណាងឱ្យ HyperText Markup Language ដែលជាភាសាគ្រោងឆ្អឹងស្តង់ដារសម្រាប់បង្កើតទំព័រវេបសាយ។"
+  },
+  editors: {
+    questionKhmer: "តើកន្ទុយឯកសារ (file extension) មួយណាដែលត្រូវបានប្រើសម្រាប់រក្សាទុកឯកសារ HTML?",
+    questionEnglish: "Which file extension is used to save HTML documents?",
+    options: [
+      ".css",
+      ".js",
+      ".html",
+      ".txt"
+    ],
+    correctIndex: 2,
+    explanation: "ឯកសារ HTML ត្រូវតែរក្សាទុកជាមួយកន្ទុយ .html ឬ .htm ដើម្បីឱ្យកម្មវិធីរុករក (Browser) អាចអាន និងបង្ហាញវាបានត្រឹមត្រូវ។"
+  },
+  basic: {
+    questionKhmer: "តើ element មួយណាជា root container (ធុងផ្ទុកធំបំផុត) នៃឯកសារ HTML ទាំងមូល?",
+    questionEnglish: "Which element is the root container of an HTML document?",
+    options: [
+      "<body>",
+      "<html>",
+      "<head>",
+      "<!DOCTYPE>"
+    ],
+    correctIndex: 1,
+    explanation: "Element <html> គឺជា root element ដែលផ្ទុកនូវរាល់ element ទាំងអស់នៃទំព័រវេបសាយ លើកលែងតែការប្រកាសប្រភេទឯកសារ <!DOCTYPE html>។"
+  },
+  elements: {
+    questionKhmer: "តើ element មួយណាខាងក្រោមនេះជា Void Element (element គ្មាន tag បិទ)?",
+    questionEnglish: "Which of the following is a Void Element?",
+    options: [
+      "<p>",
+      "<div>",
+      "<img>",
+      "<a>"
+    ],
+    correctIndex: 2,
+    explanation: "<img> គឺជា Void Element (ឬ Self-closing) ដែលមិនមាន tag បិទ </img> ទេ ដោយសារវាផ្ទុកព័ត៌មាននៅក្នុង attributes (ដូចជា src និង alt)។"
+  },
+  attributes: {
+    questionKhmer: "តើ attribute មួយណាដែលប្រើសម្រាប់កំណត់ទីតាំង URL គោលដៅនៃតំណភ្ជាប់នៅក្នុង tag <a>?",
+    questionEnglish: "Which attribute specifies the destination URL of a link in an <a> tag?",
+    options: [
+      "src",
+      "href",
+      "link",
+      "target"
+    ],
+    correctIndex: 1,
+    explanation: "Attribute href (Hypertext Reference) ត្រូវបានប្រើនៅក្នុង tag <a> ដើម្បីប្រាប់ពីអាសយដ្ឋានវេបសាយ ឬទីតាំងដែលត្រូវទៅដល់។"
+  },
+  headings: {
+    questionKhmer: "ហេតុអ្វីបានជាគេណែនាំឱ្យប្រើប្រាស់ tag <h1> តែមួយគត់នៅលើទំព័រនីមួយៗ?",
+    questionEnglish: "Why is it recommended to use only one <h1> tag per page?",
+    options: [
+      "ព្រោះវាជាលក្ខខណ្ឌបង្ខំរបស់ Browser បើមិនដូច្នោះទេកូដនឹងគាំង។",
+      "ដើម្បីជួយដល់ SEO និងការយល់ដឹងរបស់ Search Engine អំពីប្រធានបទចម្បងនៃទំព័រ។",
+      "ដើម្បីធ្វើឱ្យទំព័រដំណើរការលឿនជាងមុន។",
+      "ដើម្បីកាត់បន្ថយទំហំឯកសារ HTML។"
+    ],
+    correctIndex: 1,
+    explanation: "Search Engine ដូចជា Google ប្រើប្រាស់ <h1> ដើម្បីកំណត់ប្រធានបទសំខាន់បំផុតរបស់ទំព័រ។ ការប្រើប្រាស់វាលើសពីមួយ អាចធ្វើឱ្យប៉ះពាល់ដល់ SEO របស់វេបសាយ។"
+  },
+  paragraphs: {
+    questionKhmer: "តើ tag មួយណាដែលប្រើសម្រាប់បង្ហាញអត្ថបទដោយរក្សាទុកដកឃ្លា (spaces) និងការចុះបន្ទាត់ (newlines) ដូចកូដប្រភពដើម?",
+    questionEnglish: "Which tag is used to preserve whitespace and line breaks exactly as written in the HTML code?",
+    options: [
+      "<br>",
+      "<p>",
+      "<pre>",
+      "<span>"
+    ],
+    correctIndex: 2,
+    explanation: "Tag <pre> (Preformatted Text) នឹងបង្ហាញអត្ថបទទៅតាមទម្រង់ដើមទាំងស្រុង រួមទាំងរាល់ការចុះបន្ទាត់ និងដកឃ្លាច្រើនដង។"
+  },
+  styles: {
+    questionKhmer: "តើវិធីសរសេរ CSS មួយណាដែលត្រូវបានសរសេរដោយផ្ទាល់នៅក្នុង attribute style របស់ element HTML?",
+    questionEnglish: "Which CSS implementation method is used inside the style attribute of an HTML element?",
+    options: [
+      "External CSS",
+      "Internal CSS",
+      "Inline CSS",
+      "Embedded CSS"
+    ],
+    correctIndex: 2,
+    explanation: "Inline CSS គឺជាការកំណត់ស្ទីលដោយផ្ទាល់លើ element នីមួយៗតាមរយៈ attribute style (ឧទាហរណ៍៖ <p style=\"color: red;\">)។"
+  },
+  formatting: {
+    questionKhmer: "តើ tag <b> និង tag <strong> មានភាពខុសគ្នាដូចម្តេច?",
+    questionEnglish: "What is the difference between <b> and <strong> tags?",
+    options: [
+      "គ្មានភាពខុសគ្នាទាល់តែសោះ។",
+      "<b> ធ្វើឱ្យអក្សរដិតធម្មតា (Visual) ចំណែក <strong> បន្ថែមអត្ថន័យសំខាន់សម្រាប់ SEO និង Screen Reader (Semantic)។",
+      "<strong> ធ្វើឱ្យអក្សរធំជាង <b>។",
+      "<b> ជា block element ចំណែក <strong> ជា inline element។"
+    ],
+    correctIndex: 1,
+    explanation: "បើទោះបីជាបង្ហាញជាអក្សរដិតដូចគ្នា ប៉ុន្តែ <strong> ផ្ដើមអត្ថន័យជាសេម៉ង់ទិក (Semantic) ថាអត្ថបទនោះមានសារៈសំខាន់ ដែលជួយដល់បច្ចេកវិទ្យាជំនួយ (Screen Reader) និង SEO។"
+  },
+  comments: {
+    questionKhmer: "តើការសរសេរកំណត់ចំណាំ (Comment) ក្នុង HTML មួយណាដែលត្រឹមត្រូវ?",
+    questionEnglish: "Which is the correct way to write an HTML comment?",
+    options: [
+      "// នេះជា comment",
+      "/* នេះជា comment */",
+      "<!-- នេះជា comment -->",
+      "# នេះជា comment"
+    ],
+    correctIndex: 2,
+    explanation: "ក្នុង HTML កូដកំណត់ចំណាំត្រូវតែសរសេរនៅក្នុងចន្លោះ <!-- និង -->។ Browser នឹងមិនបង្ហាញ comment ទាំងនេះនៅលើទំព័រវេបសាយឡើយ។"
+  },
+  links: {
+    questionKhmer: "តើតម្លៃ (value) មួយណានៃ attribute target ដែលប្រើសម្រាប់បើកតំណភ្ជាប់ (link) នៅក្នុង Tab ថ្មី?",
+    questionEnglish: "Which target value is used to open a link in a new tab?",
+    options: [
+      "target=\"_self\"",
+      "target=\"_parent\"",
+      "target=\"_blank\"",
+      "target=\"_new\""
+    ],
+    correctIndex: 2,
+    explanation: "target=\"_blank\" ប្រាប់ឱ្យ Browser បើក link នោះនៅក្នុង Tab ថ្មី ឬ Window ថ្មី។"
+  },
+  images: {
+    questionKhmer: "តើ attribute alt នៅក្នុង tag <img> មានតួនាទីអ្វី?",
+    questionEnglish: "What is the purpose of the alt attribute in an <img> tag?",
+    options: [
+      "កំណត់កម្រិតពន្លឺរបស់រូបភាព។",
+      "បង្ហាញអត្ថបទជំនួសរូបភាព ប្រសិនបើរូបភាពខូច ឬសម្រាប់ជួយដល់ជនពិការភ្នែក (Screen Reader) និង SEO។",
+      "បង្កើតតំណភ្ជាប់ពេលចុចលើរូបភាព។",
+      "កំណត់ទំហំស៊ុមរបស់រូបភាព។"
+    ],
+    correctIndex: 1,
+    explanation: "Alt (Alternative Text) គឺចាំបាច់បំផុតសម្រាប់ភាពងាយស្រួលប្រើប្រាស់ (Accessibility) និង SEO ដោយវាផ្តល់ការពិពណ៌នាអំពីខ្លឹមសាររូបភាព។"
+  },
+  tables: {
+    questionKhmer: "តើ attribute មួយណាដែលប្រើសម្រាប់ភ្ជាប់ (merge) ក្រឡាតារាងច្រើនជួរឈរ (columns) ផ្ដេកចូលគ្នា?",
+    questionEnglish: "Which attribute is used to merge multiple table columns horizontally?",
+    options: [
+      "rowspan",
+      "colspan",
+      "headerspan",
+      "mergecol"
+    ],
+    correctIndex: 1,
+    explanation: "colspan (column span) ប្រើសម្រាប់ពង្រីក ឬបញ្ជូលគ្នានៃក្រឡាច្រើននៅក្នុងជួរដេក (horizontal merging)។"
+  },
+  lists: {
+    questionKhmer: "តើ tag មួយណាដែលប្រើសម្រាប់បង្កើតបញ្ជីរាយនាមមានលេខរៀបតាមលំដាប់លំដោយ (Ordered List)?",
+    questionEnglish: "Which HTML tag is used to start an ordered list?",
+    options: [
+      "<ul>",
+      "<li>",
+      "<ol>",
+      "<dl>"
+    ],
+    correctIndex: 2,
+    explanation: "Tag <ol> (Ordered List) ប្រើសម្រាប់បញ្ជីដែលមានលេខរៀង (១, ២, ៣...) ខណៈពេលដែល <ul> (Unordered List) ប្រើសម្រាប់បញ្ជីដែលមានចំណុចមូល។"
+  },
+  compiler: {
+    questionKhmer: "តើ tag មួយណាដែលត្រូវបានប្រើសម្រាប់ចុះបន្ទាត់ (Line Break) ក្នុង HTML?",
+    questionEnglish: "Which tag is used for a line break in HTML?",
+    options: [
+      "<lb>",
+      "<break>",
+      "<br>",
+      "<hr>"
+    ],
+    correctIndex: 2,
+    explanation: "<br> (break) ត្រូវបានប្រើដើម្បីចុះបន្ទាត់ថ្មី នៅក្នុងកថាខណ្ឌអត្ថបទ។"
+  }
+};
+
+function Quiz({
+  chapterId,
+  isCompleted,
+  onCorrect,
+}: {
+  chapterId: string;
+  isCompleted: boolean;
+  onCorrect: () => void;
+}) {
+  const quiz = QUIZZES[chapterId];
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const { trigger } = useWebHaptics();
+
+  useEffect(() => {
+    if (isCompleted) {
+      setSelectedOption(quiz?.correctIndex ?? null);
+      setSubmitted(true);
+    } else {
+      setSelectedOption(null);
+      setSubmitted(false);
+    }
+    setShowError(false);
+  }, [chapterId, isCompleted, quiz]);
+
+  if (!quiz) return null;
+
+  const handleOptionSelect = (index: number) => {
+    if (submitted) return;
+    setSelectedOption(index);
+    setShowError(false);
+  };
+
+  const handleSubmit = () => {
+    if (selectedOption === null) return;
+    setSubmitted(true);
+    if (selectedOption === quiz.correctIndex) {
+      setShowError(false);
+      trigger("success");
+      onCorrect();
+    } else {
+      setShowError(true);
+      trigger("heavy");
+    }
+  };
+
+  const handleRetry = () => {
+    setSelectedOption(null);
+    setSubmitted(false);
+    setShowError(false);
+  };
+
+  return (
+    <div className="space-y-6 transition-all duration-300 font-sans">
+      <div className="space-y-2">
+        <h3 className="text-xl md:text-2xl font-bold text-foreground leading-normal tracking-tight font-serif">
+          {quiz.questionKhmer}
+        </h3>
+        <p className="text-xs text-muted-foreground/80 tracking-widest uppercase">
+          {quiz.questionEnglish}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 w-full max-w-3xl">
+        {quiz.options.map((option, idx) => {
+          const isSelected = selectedOption === idx;
+          const isCorrectChoice = idx === quiz.correctIndex;
+          
+          let cardBorder = "border-border bg-card/10 dark:bg-card/5 hover:bg-card/20 hover:border-primary/40";
+          let letterBg = "bg-muted/40 text-muted-foreground border-r border-border";
+          let icon = null;
+
+          if (submitted) {
+            const isCorrectAnswer = selectedOption === quiz.correctIndex;
+            
+            if (isCorrectAnswer) {
+              if (isCorrectChoice) {
+                cardBorder = "border-[#5db872] bg-[#5db872]/5";
+                letterBg = "bg-[#5db872]/15 text-[#5db872] border-r border-[#5db872]/20";
+                icon = (
+                  <div className="w-5 h-5 rounded-full bg-[#5db872] flex items-center justify-center text-white shrink-0 mr-4">
+                    <Check className="h-3 w-3 stroke-[3]" />
+                  </div>
+                );
+              } else {
+                cardBorder = "border-border/60 opacity-60 bg-card/5";
+                letterBg = "bg-muted/20 text-muted-foreground border-r border-border/40";
+              }
+            } else {
+              if (isSelected) {
+                cardBorder = "border-[#c64545] bg-[#c64545]/5";
+                letterBg = "bg-[#c64545]/15 text-[#c64545] border-r border-[#c64545]/20";
+                icon = (
+                  <div className="w-5 h-5 rounded-full bg-[#c64545] flex items-center justify-center text-white shrink-0 mr-4">
+                    <X className="h-3 w-3 stroke-[3]" />
+                  </div>
+                );
+              } else {
+                cardBorder = "border-border bg-card/10 dark:bg-card/5";
+                letterBg = "bg-muted/40 text-muted-foreground border-r border-border";
+              }
+            }
+          } else if (isSelected) {
+            cardBorder = "border-primary bg-primary/5";
+            letterBg = "bg-primary/10 text-primary border-r border-primary/20";
+          }
+
+          return (
+            <button
+              key={idx}
+              disabled={submitted}
+              onClick={() => handleOptionSelect(idx)}
+              className={`w-full p-0 overflow-hidden rounded-xl border text-sm transition-all duration-150 flex items-center justify-between gap-3 text-left font-sans ${cardBorder}`}
+            >
+              <div className="flex items-center gap-4 flex-1">
+                {/* Left letter block sidebar */}
+                <div className={`w-12 py-4 flex items-center justify-center font-mono font-bold text-xs shrink-0 select-none ${letterBg}`}>
+                  {String.fromCharCode(65 + idx)}
+                </div>
+                {/* Choice Text */}
+                <span className="text-foreground font-medium py-2 pr-2">{option}</span>
+              </div>
+              {icon}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="space-y-4">
+        {!submitted ? (
+          <button
+            disabled={selectedOption === null}
+            onClick={handleSubmit}
+            className="px-6 py-2.5 rounded-full bg-[#2d8a6b] hover:bg-[#206950] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 font-medium text-sm shadow-sm font-sans"
+          >
+            ផ្ទៀងផ្ទាត់ចម្លើយ (Submit Answer)
+          </button>
+        ) : (
+          selectedOption !== quiz.correctIndex && (
+            <button
+              onClick={handleRetry}
+              className="px-6 py-2.5 rounded-full bg-primary hover:bg-primary/95 text-white transition-all duration-150 font-medium text-sm shadow-sm font-sans"
+            >
+              ព្យាយាមម្ដងទៀត (Try Again)
+            </button>
+          )
+        )}
+
+        {showError && selectedOption !== quiz.correctIndex && (
+          <div className="flex gap-2.5 bg-[#c64545]/5 dark:bg-[#c64545]/10 border-2 border-[#c64545]/20 rounded-xl p-4 text-xs md:text-sm text-[#c64545] font-sans max-w-3xl">
+            <XCircle className="h-5 w-5 shrink-0 mt-0.5" />
+            <div>
+              <strong className="font-bold uppercase tracking-wider text-xs">ចម្លើយមិនទាន់ត្រឹមត្រូវទេ!</strong> សូមពិនិត្យខ្លឹមសារមេរៀនឡើងវិញ ហើយសាកល្បងម្ដងទៀត។
+            </div>
+          </div>
+        )}
+
+        {(isCompleted || (submitted && selectedOption === quiz.correctIndex)) && (
+          <div className="flex gap-3 bg-[#5db872]/5 dark:bg-[#5db872]/10 border-2 border-[#5db872]/20 rounded-xl p-4 text-xs md:text-sm text-[#5db872] font-sans leading-relaxed animate-in fade-in slide-in-from-bottom-2 duration-300 max-w-3xl">
+            <CheckCircle2 className="h-5 w-5 text-[#5db872] shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <div className="font-bold text-[#5db872] uppercase tracking-wider text-xs">
+                {isCompleted ? "មេរៀនបានបញ្ចប់រួចរាល់" : "🎉 ត្រឹមត្រូវល្អណាស់!"}
+              </div>
+              <div>{quiz.explanation}</div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─────────────────────── Page ─────────────────────── */
 export default function LearnHtmlPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const [showLoginAlert, setShowLoginAlert] = useState(false);
+  const [showFinishAlert, setShowFinishAlert] = useState(false);
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
+  const [completedChapters, setCompletedChapters] = useState<string[]>([]);
   const totalChapters = 15;
 
   const CHAPTER_IDS = [
@@ -725,41 +1092,35 @@ export default function LearnHtmlPage() {
     window.dispatchEvent(new CustomEvent('chapterChangeActive', { detail: CHAPTER_IDS[currentChapterIndex] }));
   }, [currentChapterIndex]);
 
-  const advanceChapter = () => {
-    playSuccessChime();
-    confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#cc785c', '#e09882', '#f5f5f7', '#ffd700']
-    });
-    if (currentChapterIndex < totalChapters - 1) {
-      setCurrentChapterIndex(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  useEffect(() => {
+    fetch('/api/progress/html')
+      .then(r => r.json())
+      .then(res => {
+        if (res.success && res.data?.completed) {
+          setCompletedChapters(res.data.completed);
+        }
+      })
+      .catch(console.error);
+  }, [session]);
 
-  const handleNext = async () => {
+  const handleNext = () => {
     if (!session) {
       setShowLoginAlert(true);
       return;
     }
-    if (currentChapterIndex < totalChapters - 1) {
-      const activeId = CHAPTER_IDS[currentChapterIndex];
-      // Mark as completed locally to update sidebar
-      window.dispatchEvent(new CustomEvent('chapterCompleted', { detail: activeId }));
-
-      // Record to DB
-      fetch('/api/progress/html', { 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chapterId: activeId })
-      }).catch(console.error);
-
-      // Record study contribution
-      fetch('/api/study', { method: 'POST' }).catch(console.error);
-
-      advanceChapter();
+    
+    if (currentChapterIndex === totalChapters - 1) {
+      playSuccessChime();
+      confetti({
+        particleCount: 200,
+        spread: 80,
+        origin: { y: 0.5 },
+        colors: ['#cc785c', '#e09882', '#f5f5f7', '#ffd700']
+      });
+      setShowFinishAlert(true);
+    } else {
+      setCurrentChapterIndex(prev => prev + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -770,9 +1131,9 @@ export default function LearnHtmlPage() {
     }
   };
 
- return (
- <div className="flex w-full min-h-screen">
- <div className="flex-1 max-w-4xl mx-auto px-4 md:px-8 py-10 pb-24">
+ return <div className="flex flex-col w-full h-[calc(100vh-64px)] overflow-hidden">
+  <div className="flex-1 overflow-y-auto px-4 md:px-8 py-10 pb-24 scroll-smooth">
+   <div className="max-w-4xl mx-auto">
 
  {/* ── Hero ── */}
  <div className="space-y-4 mb-12">
@@ -1602,8 +1963,45 @@ ol { list-style-type: lower-alpha; } /* a, b, c */`}</CodeBlock>
         <HtmlCompiler defaultCode={code.fullPlayground} />
         </section>
 
+        {/* Quiz Gating Section */}
+        <div className="mt-12 pt-8 border-t border-border">
+          <Quiz 
+            chapterId={CHAPTER_IDS[currentChapterIndex]}
+            isCompleted={completedChapters.includes(CHAPTER_IDS[currentChapterIndex])}
+            onCorrect={() => {
+              const activeId = CHAPTER_IDS[currentChapterIndex];
+              if (completedChapters.includes(activeId)) return;
+              
+              const newCompleted = [...completedChapters, activeId];
+              setCompletedChapters(newCompleted);
+
+              // Mark as completed locally to update sidebar
+              window.dispatchEvent(new CustomEvent('chapterCompleted', { detail: activeId }));
+
+              // Record to DB
+              fetch('/api/progress/html', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chapterId: activeId })
+              }).catch(console.error);
+
+              // Record study contribution
+              fetch('/api/study', { method: 'POST' }).catch(console.error);
+
+              // Play mini success feedback
+              playSuccessChime();
+              confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#cc785c', '#e09882', '#f5f5f7', '#ffd700']
+              });
+            }}
+          />
+        </div>
+
         {/* Navigation Buttons */}
-        <div className="flex justify-between items-center mt-12 pt-8 border-t border-border">
+        <div className="flex justify-between items-center mt-8 pt-8 border-t border-border">
           <button 
             onClick={handleBack}
             disabled={currentChapterIndex === 0}
@@ -1613,7 +2011,7 @@ ol { list-style-type: lower-alpha; } /* a, b, c */`}</CodeBlock>
           </button>
           <button 
             onClick={handleNext}
-            disabled={currentChapterIndex === totalChapters - 1}
+            disabled={!completedChapters.includes(CHAPTER_IDS[currentChapterIndex])}
             className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium shadow-sm flex items-center gap-2"
           >
             {currentChapterIndex === totalChapters - 1 ? 'Finish Course' : 'Next Chapter'} →
@@ -1621,6 +2019,7 @@ ol { list-style-type: lower-alpha; } /* a, b, c */`}</CodeBlock>
         </div>
 
       </div>
+    </div>
     </div>
     
     <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
@@ -1631,14 +2030,19 @@ ol { list-style-type: lower-alpha; } /* a, b, c */`}</CodeBlock>
             អ្នកត្រូវចូលគណនីដើម្បីរក្សាទុកវឌ្ឍនភាពរបស់អ្នក និងបន្តទៅមេរៀនបន្ទាប់។
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="flex flex-col sm:flex-row gap-2">
+        <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 font-kantumruy">
           <AlertDialogCancel>បោះបង់</AlertDialogCancel>
           <AlertDialogAction 
             variant="outline" 
-            className="border-border text-foreground hover:bg-muted font-kantumruy" 
+            className="border-border text-foreground hover:bg-muted" 
             onClick={() => {
               setShowLoginAlert(false);
-              advanceChapter();
+              if (currentChapterIndex === totalChapters - 1) {
+                setShowFinishAlert(true);
+              } else {
+                setCurrentChapterIndex(prev => prev + 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
             }}
           >
             រំលង &gt;
@@ -1649,6 +2053,27 @@ ol { list-style-type: lower-alpha; } /* a, b, c */`}</CodeBlock>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+
+    <AlertDialog open={showFinishAlert} onOpenChange={setShowFinishAlert}>
+      <AlertDialogContent className="font-kantumruy">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-2xl font-bold text-center text-primary flex items-center justify-center gap-2">
+            🎉 អបអរសាទរ!
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-center text-foreground text-base mt-2 leading-relaxed">
+            អ្នកបានបញ្ចប់វគ្គសិក្សា <strong>HTML Basics</strong> ទាំងស្រុងដោយជោគជ័យ! <br/>
+            បន្តការរៀនសរសេរកូដរបស់អ្នកជាមួយភាសាផ្សេងៗទៀត។
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="flex justify-center sm:justify-center mt-4">
+          <AlertDialogAction onClick={() => {
+            setShowFinishAlert(false);
+            router.push('/');
+          }} className="px-8 bg-primary text-white hover:bg-primary/90 font-kantumruy">
+            ត្រឡប់ទៅទំព័រដើម
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
-  )
 }

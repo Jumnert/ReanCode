@@ -308,41 +308,30 @@ export default function BooksPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-background flex flex-col items-center pt-8 md:pt-16 px-4 md:px-0 font-sans">
-      <div className="w-full max-w-7xl mx-auto border-x-2 border-primary/20 bg-background/50 backdrop-blur-sm relative">
+    <main className="min-h-screen bg-[#faf9f5] dark:bg-[#181715] flex flex-col relative overflow-hidden font-sans">
+      <div className="w-full max-w-[1440px] mx-auto pattern-border-x relative flex-1 flex flex-col border-x border-[#e6dfd8] dark:border-[#252320]">
         
+        {/* Horizontal Edge-to-Edge Lines */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[100vw] h-px bg-[#e6dfd8] dark:bg-[#252320] pointer-events-none z-0" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[100vw] h-px bg-[#e6dfd8] dark:bg-[#252320] pointer-events-none z-0" />
+
         {/* Header Section */}
-        <div ref={headerRef} className="text-center py-12 md:py-20 px-4 relative overflow-hidden">
-          {/* Decorative background elements */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-64 bg-primary/10 rounded-full blur-3xl -z-10" />
-          
-          <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-2xl mb-6 shadow-sm border border-primary/20">
-            <BookOpen className="h-8 w-8 text-primary" />
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground mb-4 tracking-tight drop-shadow-sm" style={{ fontFamily: "var(--font-kantumruy-pro)" }}>
+        <div ref={headerRef} className="flex flex-col items-center text-center pt-24 pb-16 px-4 md:px-8 border-b border-[#e6dfd8] dark:border-[#252320] relative z-10">
+          <h1 className="text-4xl md:text-[56px] font-normal tracking-tight text-[#141413] dark:text-[#faf9f5] mb-4 font-serif">
             {t('title')}
           </h1>
-          <div className="flex items-center justify-center gap-3 mt-6 mb-8">
-            <div className="h-px w-12 bg-primary/30"></div>
-            <p className="text-lg md:text-xl text-muted-foreground font-medium bg-primary/5 px-4 py-1.5 rounded-full border border-primary/10">
-              {t('subtitle')}
-            </p>
-            <div className="h-px w-12 bg-primary/30"></div>
-          </div>
-
-          <p className="text-[15px] text-muted-foreground max-w-xl leading-relaxed mx-auto md:mx-auto text-center mb-10">
+          <p className="text-[16px] text-[#6c6a64] dark:text-[#a09d96] max-w-xl leading-[1.5] mb-10">
             {t('description')}
           </p>
 
           {/* Search Bar */}
-          <div className="relative max-w-md mx-auto">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-muted-foreground" />
+          <div className="relative w-full max-w-md mx-auto">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-[#a09d96]" />
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-4 py-3 bg-card border border-border rounded-full text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all shadow-sm"
+              className="block w-full pl-11 pr-4 py-3 bg-[#f5f4f0] dark:bg-[#1c1b19] border border-[#e6dfd8] dark:border-[#252320] text-[#141413] dark:text-[#faf9f5] placeholder:text-[#a09d96] text-[15px] focus:outline-none focus:border-[#cc785c] focus:ring-1 focus:ring-[#cc785c] transition-all"
               placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -350,38 +339,34 @@ export default function BooksPage() {
           </div>
         </div>
 
-        {/* Diagonal Separator */}
-        <div className="h-8 border-y-2 border-primary/20" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, var(--primary-10, rgba(204, 120, 92, 0.1)) 4px, var(--primary-10, rgba(204, 120, 92, 0.1)) 5px)' }}></div>
-
         {/* Strict Grid */}
         {filteredBooks.length > 0 ? (
-          <div className="overflow-hidden">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 -mr-[2px]">
-              {filteredBooks.map((book) => (
-                <div
-                  key={book.name}
-                  className="book-card relative flex flex-col aspect-[3/4] border-r-2 border-b-2 border-primary/20 overflow-hidden group bg-primary/5 p-2 md:p-3 transition-colors hover:bg-primary/10"
-                >
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full">
+            {filteredBooks.map((book) => (
+              <div
+                key={book.name}
+                className="book-card group relative flex flex-col aspect-[3/4] border-r border-b border-[#e6dfd8] dark:border-[#252320] overflow-hidden bg-transparent"
+              >
                 {/* Book Poster Container */}
-                <div className="relative w-full h-full rounded-lg overflow-hidden shadow-sm group-hover:shadow-xl transition-shadow duration-300 bg-white">
+                <div className="relative w-full h-full bg-[#f5f4f0] dark:bg-[#1c1b19]">
                   {/* Full Background Image */}
                   <img
                     src={book.coverUrl}
                     alt={`${book.name} Book Cover`}
-                    className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 z-0"
+                    className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-transform duration-500 z-0"
                     loading="lazy"
                   />
 
-                  {/* Gradient Overlay (Bottom 50% only) */}
-                  <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Gradient Overlay (Bottom 60% only) */}
+                  <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-[#141413]/90 via-[#141413]/40 to-transparent z-10 opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
 
                   {/* Content Overlay */}
                   <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col p-5 justify-end">
-                    <h3 className="font-bold text-[18px] text-white leading-tight mb-1 drop-shadow-md translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 className="font-bold text-[18px] text-white leading-[1.2] mb-1 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                       {book.name}
                     </h3>
-                    <div className="flex items-center gap-2 text-[12px] font-medium text-zinc-300 mb-4 drop-shadow-md translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
-                      <BookOpen className="w-3.5 h-3.5 text-primary" />
+                    <div className="flex items-center gap-2 text-[13px] text-[#e6dfd8] mb-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                      <BookOpen className="w-3.5 h-3.5 text-[#cc785c]" />
                       <span>Notes for Professionals</span>
                     </div>
 
@@ -391,36 +376,35 @@ export default function BooksPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={handleDownload}
-                        className="flex w-full items-center justify-center gap-2 bg-white/15 hover:bg-primary text-white font-semibold py-2.5 px-4 rounded-full backdrop-blur-md transition-all duration-300 text-[13px] active:scale-[0.97] border border-white/20 hover:border-transparent shadow-lg"
+                        className="flex w-full items-center justify-center gap-2 bg-white/10 hover:bg-[#cc785c] text-white font-medium py-2.5 px-4 backdrop-blur-md transition-colors duration-300 text-[14px] active:scale-[0.98] border border-white/20 hover:border-transparent"
                       >
-                        <Download className="w-3.5 h-3.5" />
+                        <Download className="w-4 h-4" />
                         {t('downloadPdf')}
                       </a>
                     </div>
                   </div>
                 </div>
               </div>
-              ))}
-            </div>
+            ))}
           </div>
         ) : (
-          <div className="py-20 text-center border-2 border-dashed border-border rounded-xl">
-            <p className="text-muted-foreground text-lg">
+          <div className="py-24 text-center border-b border-[#e6dfd8] dark:border-[#252320]">
+            <p className="text-[#6c6a64] dark:text-[#a09d96] text-[16px]">
               {t('noBooksFound', { query: searchQuery })}
             </p>
           </div>
         )}
 
         {/* CC BY-SA Footer */}
-        <div className="mt-16 pt-8 border-t-2 border-primary/20">
-          <p className="text-[13px] text-muted-foreground text-center max-w-3xl mx-auto leading-relaxed">
+        <div className="py-12 px-6 flex items-center justify-center flex-1">
+          <p className="text-[13px] text-[#6c6a64] dark:text-[#a09d96] text-center max-w-3xl leading-[1.6]">
             <strong>ចំណាំ៖</strong> សៀវភៅ GoalKicker ត្រូវបានចងក្រងពីខ្លឹមសារ
             Stack Overflow Documentation ហើយត្រូវបានចែកចាយក្រោមអាជ្ញាប័ណ្ណ{" "}
             <a
               href="https://creativecommons.org/licenses/by-sa/3.0/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline font-medium"
+              className="text-[#cc785c] hover:text-[#a9583e] font-medium transition-colors"
             >
               Creative Commons Attribution-ShareAlike (CC BY-SA)
             </a>
@@ -428,6 +412,6 @@ export default function BooksPage() {
           </p>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

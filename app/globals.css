@@ -6,17 +6,23 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-sans: "StyreneB", "Inter", var(--font-sans), var(--font-kantumruy-pro), sans-serif;
+  --font-serif: "Copernicus", "Tiempos Headline", var(--font-serif), var(--font-kantumruy-pro), serif;
+  --font-mono: "JetBrains Mono", var(--font-mono), var(--font-kantumruy-pro), monospace;
+}
+
 /* Custom Fonts */
 body {
-    font-family: var(--font-serif), var(--font-kantumruy-pro), serif;
+    font-family: var(--font-sans);
 }
 
 h1, h2, h3, h4, h5, h6, .font-serif {
-    font-family: var(--font-serif), var(--font-kantumruy-pro), serif;
+    font-family: var(--font-serif);
 }
 
 code, pre, .font-mono {
-    font-family: var(--font-mono), var(--font-kantumruy-pro), monospace;
+    font-family: var(--font-mono);
 }
 
 /* Hide scrollbar while keeping functionality */
